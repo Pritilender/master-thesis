@@ -10,17 +10,26 @@ module.exports = {
 	settings: {
 		port: process.env.PORT || 3000,
 
-		routes: [{
-			path: '/api',
-			whitelist: [
-				// Access to any actions in all services under "/api" URL
-				'**'
-			]
-		}],
+		routes: [
+			{
+				path: '/api',
+				aliases: {
+					'REST vehicles': 'vehicles',
+				}
+			},
+			{
+				path: '/',
+				aliases: {
+					'GET vehicles' (req, res) {
+						res.end('abc')
+					}
+				}
+			}
+		],
 
 		// Serve assets from "public" folder
 		assets: {
 			folder: 'public'
-		}
+		},
 	}
 }
