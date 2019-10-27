@@ -1,0 +1,34 @@
+digraph G {
+    splines=ortho
+
+    /* Entities */
+    ui [label="UI", shape="rect"]
+    car [label="Car Module", shape=""]
+    scooter [label="Scooter Module", shape=""]
+
+    vehicles [label="Vehicle Service", shape="rect", group="vehicle"]
+    vehiclesDb [label="SQL DB", shape="cylinder", group="vehicle"]
+    decoder [label="Vehicle Message Decoder Service", shape="rect", group="decoder"]
+    decoderDb [label="MongoDB", shape="cylinder", group="decoder"]
+    analysis [label="Vehicle Info Analysis Service", shape="rect"]
+    email [label="Email Service", shape="rect"]
+
+    apiGateway [label="API Gateway Service", shape="rect", width=5, style="dashed"]
+    
+    /* Relationships */
+    ui -> apiGateway // Vehicle Info, Messages
+    car -> apiGateway // Car Info Message
+    scooter -> apiGateway // Scooter Info Message
+    apiGateway -> decoder // New Message, List all Messages
+    apiGateway -> vehicles // CRUD Operations for Vehicles
+    decoder -> vehicles // Update Vehicle
+    decoder -> analysis // Analyse Message for Known Patterns (e.g. Fuel Level Alert)
+    analysis -> email // Send Email for Found Pattern
+    email -> vehicles // Vehicle Info
+
+    decoder -> decoderDb
+    vehicles -> vehiclesDb
+
+    { rank=same ui car scooter }
+    { rank=same vehicles decoder }
+}
