@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vehicle List</title>
+	<style>
+		table {
+			margin: 0 auto;
+			width: 600px;
+			text-align: center;
+		}
+
+		th {
+			border-bottom: 2px solid #1a1a1a;
+		}
+
+		tr {
+			background: #a0a0a0;
+		}
+
+		tr:nth-of-type(odd) {
+			background: #ffffff;
+		}
+
+		tr:nth-of-type(1) {
+			background: #ffffff;
+		}
+	</style>
+</head>
+<body>
+	<h1>Vehicles</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Fuel Type</th>
+				<th>Fuel Level</th>
+				<th>Type</th>
+				<th>Total Distance</th>
+			</tr>
+		</thead>
+		<tbody id="vehicles">
+		</tbody>
+	</table>
+</body>
+<script>
+	const textNode = (text) => document.createTextNode(text)
+	const insertCell = (row, text) => row.insertCell().appendChild(textNode(text))
+	const fields = [
+		'id',
+		'name',
+		'fuelType',
+		'fuelLevel',
+		'type',
+		'totalDistance',
+	]
+
+	fetch('http://localhost:3000/api/vehicles')
+		.then(response => response.json())
+		.then(json => {
+			const tableRef = document.getElementById('vehicles')
+
+			for (const row of json.rows) {
+				const tableRow = tableRef.insertRow(-1)
+				fields.map(x => insertCell(tableRow, row[x] || '-'))
+			}
+		})
+</script>
+</html>

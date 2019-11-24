@@ -17,14 +17,6 @@ module.exports = {
 					'REST vehicles': 'vehicles',
 				}
 			},
-			{
-				path: '/',
-				aliases: {
-					'GET vehicles' (req, res) {
-						res.end('abc')
-					}
-				}
-			}
 		],
 
 		// Serve assets from "public" folder

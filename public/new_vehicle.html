@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Create a Vehicle</title>
+</head>
+<body>
+	<h1>Create new Vehicle</h1>
+	<form id="vehicleForm" action="/api/vehicles" method="POST">
+		<div>
+			<label for="name">Name:</label>
+			<input type="text" id="name" name="name">
+		</div>
+		<div>
+			<label for="fuelType">Fuel Type:</label>
+			<input type="text" id="fuelType" name="fuelType">
+		</div>
+		<div>
+			<label for="type">Vehicle Type:</label>
+			<input type="text" id="type" name="type">
+		</div>
+		<div>
+			<button type="button" onclick="submitForm()">Create Vehicle</button>
+		</div>
+	</form>
+</body>
+<script>
+	function submitForm() {
+		const form = document.getElementById('vehicleForm')
+		const formData = new FormData(form)
+		const body = {}
+
+		for (const entry of formData.entries()) {
+			body[entry[0]] = entry[1]
+		}
+
+		fetch('http://localhost:3000/api/vehicles',
+			{ 
+				method: 'POST',
+				headers: { 
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(body),
+			})
+		.then(respoonse => console.log(respoonse))
+	}
+</script>
+</html>
