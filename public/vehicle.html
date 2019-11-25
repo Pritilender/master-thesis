@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <title>Info for Single Vehicle</title>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+</head>
+<body>
+    <h1 id="title"></h1>
+    <div id="carInfo">
+    </div>
+	<div>
+		<a href="index.html">Back home</a>
+	</div>
+</body>
+<script>
+    const carInfoParent = document.getElementById('carInfo')
+    const fields = [
+        'id',
+        'name',
+        'createdAt',
+        'type',
+		'fuelType',
+		'fuelLevel',
+        'totalDistance',
+        'location',
+    ]
+
+    const prettySnakeCase = (text) => _.words(text).map((x, i) => i == 0 ? _.upperFirst(x) : _.toLower(x)).join(' ')
+    
+    const textNode = (text) => document.createTextNode(text)
+    const fieldStructure = (key, value) => {
+        const propertyParent = document.createElement('div')
+        const labelChild = document.createElement('span')
+        const valueChild = document.createElement('span')
+
+        labelChild.appendChild(textNode(prettySnakeCase(key) + ': '))
+        valueChild.appendChild(textNode(value || '-'))
+
+        propertyParent.appendChild(labelChild)
+        propertyParent.appendChild(valueChild)
+
+        carInfoParent.appendChild(propertyParent)
+    }
+
+    const loadVehicle = () => {
+        const urlParams = new URLSearchParams(window.location.search)
+        const vehicleId = urlParams.get('id')
+
+        fetch(`http://localhost:3000/api/vehicles/${vehicleId}`)
+		    .then(response => {
+                if (response.status == 404) {
+                    throw new Error(`Vehicle with id ${vehicleId} doesn't exist.`)
+                } else if (response.status >= 400) {
+                    throw new Error(`Something went wrong.`)
+                }
+                return response.json()
+            })
+		    .then(json => {
+    			for (const [key, value] of Object.entries(json)) {
+                    if (json.hasOwnProperty(key) && fields.indexOf(key) > -1) {
+                        fieldStructure(key, value)
+                    }
+    			}
+            })
+            .catch(error => {
+                carInfoParent.appendChild(textNode(error.message))
+            })
+    }
+
+    window.onload = loadVehicle
+</script>
+</html>

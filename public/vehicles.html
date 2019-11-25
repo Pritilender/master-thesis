@@ -39,6 +39,7 @@
 				<th>Fuel Level</th>
 				<th>Type</th>
 				<th>Total Distance</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody id="vehicles">
@@ -49,8 +50,16 @@
 	</div>
 </body>
 <script>
+	const baseUrl = 'http://localhost:3000/api'
 	const textNode = (text) => document.createTextNode(text)
-	const insertCell = (row, text) => row.insertCell().appendChild(textNode(text))
+	const insertCell = (row, node) => row.insertCell().appendChild(node)
+	const insertTextCell = (row, text) => insertCell(row, textNode(text))
+	const anchorNode = (subPath, text) => {
+		const anchor = document.createElement('a')
+		anchor.setAttribute('href', subPath)
+		anchor.innerText = text
+		return anchor
+	}
 	const fields = [
 		'id',
 		'name',
@@ -60,14 +69,15 @@
 		'totalDistance',
 	]
 
-	fetch('http://localhost:3000/api/vehicles')
+	fetch(`${baseUrl}/vehicles`)
 		.then(response => response.json())
 		.then(json => {
 			const tableRef = document.getElementById('vehicles')
 
 			for (const row of json.rows) {
 				const tableRow = tableRef.insertRow(-1)
-				fields.map(x => insertCell(tableRow, row[x] || '-'))
+				fields.map(x => insertTextCell(tableRow, row[x] || '-'))
+				insertCell(tableRow, anchorNode(`vehicle.html?id=${row.id}`, '➡'))
 			}
 		})
 </script>

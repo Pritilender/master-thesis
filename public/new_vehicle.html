@@ -46,7 +46,13 @@
 				},
 				body: JSON.stringify(body),
 			})
-		.then(respoonse => console.log(respoonse))
+		.then(_ => {
+			const parent = document.createElement('div')
+			const text = document.createTextNode('Vehicle successfully created!')
+			parent.appendChild(text)
+
+			form.replaceWith(parent)
+		})
 	}
 </script>
 </html>
