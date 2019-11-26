@@ -19,6 +19,7 @@ const vehicleFactory = () => {
 	const vehicle = {
 		name: randomItem(brands) + ' ' + randomItem(models),
 		type: randomItem(type),
+		externalId: Math.floor(Math.random() * 1000000000000 + Date.now()),
 	}
 
 	vehicle.fuelType = vehicle.type == 'scooter' ? 'electric' : randomItem(fuelTypes)
@@ -33,7 +34,19 @@ const model = {
 			type: Sequelize.STRING,
 			allowNull: false,
 		},
-		location: Sequelize.JSONB,
+		externalId: {
+			type: Sequelize.STRING,
+			allowNull: false,
+			unique: true,
+		},
+		type: {
+			type: Sequelize.STRING,
+			allowNull: false,
+		},
+		fuelType: {
+			type: Sequelize.STRING,
+			allowNUll: false,
+		},
 		fuelLevel: {
 			type: Sequelize.SMALLINT,
 			allowNull: false,
@@ -43,14 +56,7 @@ const model = {
 				max: 100,
 			},
 		},
-		fuelType: {
-			type: Sequelize.STRING,
-			allowNUll: false,
-		},
-		type: {
-			type: Sequelize.STRING,
-			allowNull: false,
-		},
+		location: Sequelize.JSONB,
 		totalDistance: {
 			type: Sequelize.INTEGER,
 			allowNull: false,

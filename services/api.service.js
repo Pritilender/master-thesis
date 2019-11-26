@@ -15,6 +15,7 @@ module.exports = {
 				path: '/api',
 				aliases: {
 					'REST vehicles': 'vehicles',
+					'POST message': 'messageDecoder.decode',
 				}
 			},
 		],

@@ -34,6 +34,7 @@
 		<thead>
 			<tr>
 				<th>ID</th>
+				<th>External ID</th>
 				<th>Name</th>
 				<th>Fuel Type</th>
 				<th>Fuel Level</th>
@@ -62,6 +63,7 @@
 	}
 	const fields = [
 		'id',
+		'externalId',
 		'name',
 		'fuelType',
 		'fuelLevel',
@@ -69,7 +71,7 @@
 		'totalDistance',
 	]
 
-	fetch(`${baseUrl}/vehicles?pageSize=100`)
+	fetch(`${baseUrl}/vehicles?pageSize=100&sort=createdAt`)
 		.then(response => response.json())
 		.then(json => {
 			const tableRef = document.getElementById('vehicles')

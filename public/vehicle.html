@@ -24,7 +24,6 @@
 		'fuelType',
 		'fuelLevel',
         'totalDistance',
-        'location',
     ]
 
     const prettySnakeCase = (text) => _.words(text).map((x, i) => i == 0 ? _.upperFirst(x) : _.toLower(x)).join(' ')
@@ -62,7 +61,11 @@
                     if (json.hasOwnProperty(key) && fields.indexOf(key) > -1) {
                         fieldStructure(key, value)
                     }
-    			}
+                }
+                
+                fieldStructure('latitude', (json.location && json.location.lat) || 'unknown')
+                fieldStructure('longitude', (json.location && json.location.lng) || 'unknown')
+                
             })
             .catch(error => {
                 carInfoParent.appendChild(textNode(error.message))
