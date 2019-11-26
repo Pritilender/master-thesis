@@ -8,6 +8,24 @@ const adapter = new SqlAdapter('vehicles', '', '', {
 	dialect: 'postgres',
 })
 
+const randomItem = (items) => items[Math.floor(Math.random() * items.length)]
+
+const vehicleFactory = () => {
+	const brands = ['BMW', 'Toyota', 'Hyundai', 'Mercedes', 'Ford', 'Segway']
+	const models = ['X1', 'X2', 'Accord', 'Corola', '500', 'CL', 'Tucson', 'i30', 'M520', '123']
+	const fuelTypes = ['electric', 'hybrid', 'euro 6', 'gasolin']
+	const type = ['scooter', 'car', 'car', 'car']
+	
+	const vehicle = {
+		name: randomItem(brands) + ' ' + randomItem(models),
+		type: randomItem(type),
+	}
+
+	vehicle.fuelType = vehicle.type == 'scooter' ? 'electric' : randomItem(fuelTypes)
+
+	return vehicle
+}
+
 const model = {
 	name: 'vehicle',
 	define: {
@@ -58,7 +76,10 @@ module.exports = {
 	mixins: [DbService],
 	adapter,
 	model,
-	started() {
-		this.model.sync({force: true})
+	async started() {
+		await this.model.sync({force: true})
+		for (let i = 0; i < 50; i++) {
+			await this.model.create(vehicleFactory())
+		}
 	}
 }

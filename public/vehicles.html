@@ -69,7 +69,7 @@
 		'totalDistance',
 	]
 
-	fetch(`${baseUrl}/vehicles`)
+	fetch(`${baseUrl}/vehicles?pageSize=100`)
 		.then(response => response.json())
 		.then(json => {
 			const tableRef = document.getElementById('vehicles')
