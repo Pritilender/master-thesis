@@ -3,51 +3,48 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<title>Vehicle List</title>
-	<style>
-		table {
-			margin: 0 auto;
-			width: 600px;
-			text-align: center;
-		}
-
-		th {
-			border-bottom: 2px solid #1a1a1a;
-		}
-
-		tr {
-			background: #a0a0a0;
-		}
-
-		tr:nth-of-type(odd) {
-			background: #ffffff;
-		}
-
-		tr:nth-of-type(1) {
-			background: #ffffff;
-		}
-	</style>
 </head>
 <body>
-	<h1>Vehicles</h1>
-	<table>
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>External ID</th>
-				<th>Name</th>
-				<th>Fuel Type</th>
-				<th>Fuel Level</th>
-				<th>Type</th>
-				<th>Total Distance</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody id="vehicles">
-		</tbody>
-	</table>
-	<div>
-		<a href="index.html">Back home</a>
+	<section class="hero is-dark" style="margin-bottom: 42px;">
+		<nav class="navbar">
+			<div class="navbar-menu">
+				<div class="navbar-end">
+					<a href="index.html" class="navbar-item">⬅ Back home</a>
+				</div>
+			</div>
+		</nav>
+		<div class="hero-body">
+			<div class="container">
+				<h1 class="title">
+					Vehicles
+				</h1>
+			</div>
+		</div>
+	</section>
+	<div class="container">
+		<table class="table is-striped is-hoverable is-fullwidth">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>External ID</th>
+					<th>Name</th>
+					<th>Fuel Type</th>
+					<th>Fuel Level</th>
+					<th>Type</th>
+					<th>Total Distance</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody id="vehicles">
+			</tbody>
+		</table>
+		<div>
+			
+		</div>
 	</div>
 </body>
 <script>

@@ -3,29 +3,44 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<title>Create a Vehicle</title>
 </head>
 <body>
-	<h1>Create new Vehicle</h1>
-	<form id="vehicleForm" action="/api/vehicles" method="POST">
-		<div>
-			<label for="name">Name:</label>
-			<input type="text" id="name" name="name">
+	<section class="hero is-dark" style="margin-bottom: 42px;">
+		<nav class="navbar">
+			<div class="navbar-menu">
+				<div class="navbar-end">
+					<a href="index.html" class="navbar-item">⬅ Back home</a>
+				</div>
+			</div>
+		</nav>
+		<div class="hero-body">
+			<div class="container">
+				<h1 class="title">Create new vehicle</h1>
+			</div>
 		</div>
-		<div>
-			<label for="fuelType">Fuel Type:</label>
-			<input type="text" id="fuelType" name="fuelType">
-		</div>
-		<div>
-			<label for="type">Vehicle Type:</label>
-			<input type="text" id="type" name="type">
-		</div>
-		<div>
-			<button type="button" onclick="submitForm()">Create Vehicle</button>
-		</div>
-	</form>
-	<div>
-		<a href="index.html">Back home</a>
+	</section>
+	<div class="container">
+		<form id="vehicleForm" action="/api/vehicles" method="POST">
+			<div class="field">
+				<label for="name" class="label">Name:</label>
+				<input type="text" id="name" name="name" class="control">
+			</div>
+			<div class="field">
+				<label for="fuelType" class="label">Fuel Type:</label>
+				<input type="text" id="fuelType" name="fuelType" class="control">
+			</div>
+			<div class="field">
+				<label for="type" class="label">Vehicle Type:</label>
+				<input type="text" id="type" name="type" class="control">
+			</div>
+			<div>
+				<button type="button" onclick="submitForm()" class="button is-link">Create Vehicle</button>
+			</div>
+		</form>
 	</div>
 </body>
 <script>

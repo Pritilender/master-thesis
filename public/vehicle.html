@@ -2,17 +2,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <title>Info for Single Vehicle</title>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
 </head>
 <body>
-    <h1 id="title"></h1>
-    <div id="carInfo">
+    <section class="hero is-dark" style="margin-bottom: 42px;">
+        <nav class="navbar">
+            <div class="navbar-menu">
+                <div class="navbar-end">
+                    <a href="index.html" class="navbar-item">⬅ Back home</a>
+                </div>
+            </div>
+        </nav>
+        <div class="hero-body">
+            <div class="container">
+                <!-- todo: add ID -->
+                <h1 class="title">Vehicle info</h1>
+            </div>
+        </div>
+    </section>
+    <div id="carInfo" class="container is-centered">
     </div>
-	<div>
-		<a href="index.html">Back home</a>
-	</div>
 </body>
 <script>
     const carInfoParent = document.getElementById('carInfo')
@@ -41,6 +55,8 @@
         propertyParent.appendChild(valueChild)
 
         carInfoParent.appendChild(propertyParent)
+
+        labelChild.classList.add('has-text-weight-bold')
     }
 
     const loadVehicle = () => {
