@@ -25,6 +25,7 @@
     "moleculer-db-adapter-sequelize": "^0.2.2",
     "moleculer-web": "^0.8.5",
     "nats": "^1.3.0",
+    "node-fetch": "^2.6.0",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.21.1"
