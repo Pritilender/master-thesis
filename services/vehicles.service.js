@@ -48,17 +48,17 @@ const model = {
 			allowNUll: false,
 		},
 		fuelLevel: {
-			type: Sequelize.SMALLINT,
+			type: Sequelize.INTEGER,
 			allowNull: false,
 			defaultValue: 50,
-			validate: {
-				min: 0,
-				max: 100,
-			},
+			// validate: {
+			// 	min: 0,
+			// 	max: 100,
+			// },
 		},
 		location: Sequelize.JSONB,
 		totalDistance: {
-			type: Sequelize.INTEGER,
+			type: Sequelize.BIGINT,
 			allowNull: false,
 			defaultValue: 0,
 			validate: {

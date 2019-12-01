@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-	name: 'messageDecoder',
+	name: 'vehicleMessage',
 
 	/**
 	 * Actions
@@ -13,14 +13,14 @@ module.exports = {
 		 * 
 		 * Message can come in 3 different formats:
 		 * 
-		 * 1. { id: string, location: { lat: number, lng: number } }
-		 * 2. { id: string, lat: number, lng: number }
-		 * 3. { vin: string, location: [number, number] }
+		 * 1. { id: string, location: { lat: number, lng: number }, odometer: number, fuelLevel: number }
+		 * 2. { id: string, lat: number, lng: number, distanceTravelled: number, batteryPercentage: number }
+		 * 3. { vin: string, location: [number, number], odometer: number, fuel: number }
 		 */
 		async decode(ctx) {
 			const message = this.parseMessage(ctx.params)
 			const vehicle = await this.findVehicle(message.externalId)
-			await this.broker.call('vehicles.update', { id: vehicle.id, location: message.location })
+			await this.broker.call('vehicles.update', { id: vehicle.id, ...message })
 		},
 	},
 
@@ -46,6 +46,8 @@ module.exports = {
 					lat: message.latitude,
 					lng: message.longitude,
 				},
+				fuelLevel: message.fuelLevel,
+				totalDistance: message.odometer,
 			}
 		},
 		parseFormat2(message) {
@@ -55,6 +57,8 @@ module.exports = {
 					lat: message.lat,
 					lng: message.lng,
 				},
+				fuelLevel: message.batteryPercentage,
+				totalDistance: message.distanceTravelled,
 			}
 		},
 		parseFormat3(message) {
@@ -64,6 +68,8 @@ module.exports = {
 					lat: message.location[1],
 					lng: message.location[0],
 				},
+				fuelLevel: message.fuel,
+				totalDistance: message.odometer,
 			}
 		},
 		async findVehicle(externalId) {
