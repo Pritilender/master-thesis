@@ -13,8 +13,8 @@
     <section class="hero is-dark" style="margin-bottom: 42px;">
         <nav class="navbar">
             <div class="navbar-menu">
-                <div class="navbar-end">
-                    <a href="index.html" class="navbar-item">⬅ Back home</a>
+                <div class="navbar-end" id="navigation">
+                    <a href="index.html" class="navbar-item">🏡 Back home</a>
                 </div>
             </div>
         </nav>
@@ -42,6 +42,12 @@
 
     const prettySnakeCase = (text) => _.words(text).map((x, i) => i == 0 ? _.upperFirst(x) : _.toLower(x)).join(' ')
     
+    const anchorNode = (subPath, text) => {
+		const anchor = document.createElement('a')
+		anchor.setAttribute('href', subPath)
+		anchor.innerText = text
+		return anchor
+	}
     const textNode = (text) => document.createTextNode(text)
     const fieldStructure = (key, value) => {
         const propertyParent = document.createElement('div')
@@ -82,6 +88,9 @@
                 fieldStructure('latitude', (json.location && json.location.lat) || 'unknown')
                 fieldStructure('longitude', (json.location && json.location.lng) || 'unknown')
                 
+                const backToVehicleAnchor = anchorNode(`vehicle_messages.html?id=${vehicleId}`, 'Go to Vehicle Messages 📩')
+	            backToVehicleAnchor.classList.add('button', 'is-primary')
+	            document.getElementById('carInfo').appendChild(backToVehicleAnchor)
             })
             .catch(error => {
                 carInfoParent.appendChild(textNode(error.message))

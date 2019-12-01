@@ -1,8 +1,12 @@
 'use strict'
+const DbService = require('moleculer-db')
+const MongoDBAdapter = require('moleculer-db-adapter-mongo')
 
 module.exports = {
 	name: 'vehicleMessage',
-
+	mixins: [DbService],
+	adapter: new MongoDBAdapter('mongodb://localhost/thesis'),
+	collection: 'messages',
 	/**
 	 * Actions
 	 */
@@ -21,6 +25,7 @@ module.exports = {
 			const message = this.parseMessage(ctx.params)
 			const vehicle = await this.findVehicle(message.externalId)
 			await this.broker.call('vehicles.update', { id: vehicle.id, ...message })
+			await this.actions.create({ original: ctx.params, parsed: message, receivedAt: Date.now(), vehicleId: vehicle.id })
 		},
 	},
 

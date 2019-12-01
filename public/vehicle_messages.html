@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Vehicle List</title>
+</head>
+<body>
+	<section class="hero is-dark" style="margin-bottom: 42px;">
+		<nav class="navbar">
+			<div class="navbar-menu">
+				<div class="navbar-end" id="navigation">
+					<a href="index.html" class="navbar-item">🏡 Back home</a>
+				</div>
+			</div>
+		</nav>
+		<div class="hero-body">
+			<div class="container">
+				<h1 class="title">
+					Vehicle messages
+				</h1>
+			</div>
+		</div>
+	</section>
+	<div class="container">
+		<table class="table is-striped is-hoverable is-fullwidth">
+			<thead>
+				<tr>
+					<th>Received at</th>
+					<th>Original</th>
+					<th>Parsed</th>
+				</tr>
+			</thead>
+			<tbody id="messages">
+			</tbody>
+		</table>
+		<div>
+			
+		</div>
+	</div>
+</body>
+<script>
+	const baseUrl = 'http://localhost:3000/api'
+	const urlParams = new URLSearchParams(window.location.search)
+	const vehicleId = urlParams.get('id')
+
+	const anchorNode = (subPath, text) => {
+		const anchor = document.createElement('a')
+		anchor.setAttribute('href', subPath)
+		anchor.innerText = text
+		return anchor
+	}
+	const textNode = (text) => document.createTextNode(text)
+	const preNode = (text) => {
+		const pre = document.createElement('pre')
+		pre.innerHTML = text
+		return pre
+	}
+	const insertCell = (row, node) => row.insertCell().appendChild(node)
+	const insertTextCell = (row, text) => insertCell(row, textNode(text))
+	const insertPreCell = (row, text) => insertCell(row, preNode(text))
+	
+	const fields = [
+		'receivedAt',
+		'original',
+		'parsed',
+	]
+
+	const backToVehicleAnchor = anchorNode(`vehicle.html?id=${vehicleId}`, '⬅ Back to vehicle')
+	backToVehicleAnchor.classList.add('navbar-item')
+	document.getElementById('navigation').appendChild(backToVehicleAnchor)
+
+	fetch(`${baseUrl}/vehicle-messages?pageSize=1000&sort=receivedAt&query=[vehicleId]=${vehicleId}`)
+		.then(response => response.json())
+		.then(json => {
+			const tableRef = document.getElementById('messages')
+
+			for (const row of json.rows) {
+				const tableRow = tableRef.insertRow(-1)
+				insertTextCell(tableRow, (new Date(row.receivedAt)).toLocaleString('sr'))
+				insertPreCell(tableRow, JSON.stringify(row.original, null, 2))
+				insertPreCell(tableRow, JSON.stringify(row.parsed, null, 2))
+			}
+		})
+</script>
+</html>

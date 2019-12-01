@@ -16,6 +16,7 @@ module.exports = {
 				aliases: {
 					'REST vehicles': 'vehicles',
 					'POST message': 'vehicleMessage.decode',
+					'GET vehicle-messages': 'vehicleMessage.list',
 				}
 			},
 		],
