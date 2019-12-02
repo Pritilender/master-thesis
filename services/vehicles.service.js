@@ -64,6 +64,11 @@ const model = {
 			validate: {
 				min: 0,
 			}
+		},
+		state: {
+			type: Sequelize.STRING,
+			defaultValue: 'locked',
+			allowNull: false,
 		}
 	},
 	options: {

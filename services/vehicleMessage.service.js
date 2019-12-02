@@ -11,9 +11,10 @@ module.exports = {
 	 * Actions
 	 */
 	actions: {
-
 		/**
 		 * Decode a message to default format for DB.
+		 * 
+		 * Also store this message to local DB.
 		 * 
 		 * Message can come in 3 different formats:
 		 * 
@@ -27,6 +28,17 @@ module.exports = {
 			await this.broker.call('vehicles.update', { id: vehicle.id, ...message })
 			await this.actions.create({ original: ctx.params, parsed: message, receivedAt: Date.now(), vehicleId: vehicle.id })
 		},
+		/**
+		 * Execute an action on the vehicle. It's either lock or unlock the vehicle.
+		 */
+		async executeAction(ctx) {
+			const { action, vehicleId } = ctx.params
+			// const vehicle = await this.broker.call('vehicles.findById', vehicleId)
+			// todo: potentially add a new service(s) that will "send" parse message back
+			
+			await this.broker.call('vehicles.update', { id: vehicleId, state: `${action}ed` })
+			await this.actions.create({ receivedAt: Date.now(), vehicleId: vehicleId, action })
+		}
 	},
 
 	/**

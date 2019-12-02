@@ -38,6 +38,7 @@
 		'fuelType',
 		'fuelLevel',
         'totalDistance',
+        'state',
     ]
 
     const prettySnakeCase = (text) => _.words(text).map((x, i) => i == 0 ? _.upperFirst(x) : _.toLower(x)).join(' ')

@@ -30,8 +30,7 @@
 			<thead>
 				<tr>
 					<th>Received at</th>
-					<th>Original</th>
-					<th>Parsed</th>
+					<th>Content</th>
 				</tr>
 			</thead>
 			<tbody id="messages">
@@ -65,15 +64,14 @@
 	
 	const fields = [
 		'receivedAt',
-		'original',
-		'parsed',
+		'content',
 	]
 
 	const backToVehicleAnchor = anchorNode(`vehicle.html?id=${vehicleId}`, '⬅ Back to vehicle')
 	backToVehicleAnchor.classList.add('navbar-item')
 	document.getElementById('navigation').appendChild(backToVehicleAnchor)
 
-	fetch(`${baseUrl}/vehicle-messages?pageSize=1000&sort=receivedAt&query=[vehicleId]=${vehicleId}`)
+	fetch(`${baseUrl}/vehicle-messages?pageSize=1000&sort=-receivedAt&query=[vehicleId]=${vehicleId}`)
 		.then(response => response.json())
 		.then(json => {
 			const tableRef = document.getElementById('messages')
@@ -81,8 +79,12 @@
 			for (const row of json.rows) {
 				const tableRow = tableRef.insertRow(-1)
 				insertTextCell(tableRow, (new Date(row.receivedAt)).toLocaleString('sr'))
-				insertPreCell(tableRow, JSON.stringify(row.original, null, 2))
-				insertPreCell(tableRow, JSON.stringify(row.parsed, null, 2))
+
+				if (row.original) {
+					insertPreCell(tableRow, JSON.stringify({ original: row.original, parsed: row.parse }, null, 2))
+				} else {
+					insertPreCell(tableRow, JSON.stringify({ action: row.action }, null, 2))
+				}
 			}
 		})
 </script>
