@@ -9,22 +9,23 @@ module.exports = {
 	// More info about settings: https://moleculer.services/docs/0.13/moleculer-web.html
 	settings: {
 		port: process.env.PORT || 3000,
-
 		routes: [
 			{
 				path: '/api',
 				aliases: {
 					'REST vehicles': 'vehicles',
-					'POST message': 'vehicleMessage.decode',
-					'POST action': 'vehicleMessage.executeAction',
-					'GET vehicle-messages': 'vehicleMessage.list',
+					'POST message': 'vehicleCommunicator.decode',
+					'POST action': 'vehicleCommunicator.executeAction',
+					'GET vehicle-messages': 'vehicleCommunicator.list',
 				}
 			},
 		],
-
 		// Serve assets from "public" folder
 		assets: {
 			folder: 'public'
 		},
+	},
+	started() {
+		this.logger.info('Listening on port', process.env.PORT)
 	}
 }

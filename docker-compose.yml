@@ -1,69 +1,48 @@
-version: "3.2"
-
+version: "3.7"
 services:
 
-  api:
-    build:
-      context: .
-    image: master
-    container_name: master-api
-    env_file: docker-compose.env
-    environment:
-      SERVICES: api
-      PORT: 3000
-    depends_on:
-      - nats
-    labels:
-      - "traefik.enable=true"
-      - "traefik.backend=api"
-      - "traefik.port=3000"
-      - "traefik.frontend.entryPoints=http"
-      - "traefik.frontend.rule=PathPrefix:/"
-    networks:
-      - internal
-
-  greeter:
-    build:
-      context: .
-    image: master
-    container_name: master-greeter
-    env_file: docker-compose.env
-    environment:
-      SERVICES: greeter
-    labels:
-      - "traefik.enable=false"
-    depends_on:
-      - nats
-    networks:
-      - internal
-
   nats:
-    image: nats
-    labels:
-      - "traefik.enable=false"
-    networks:
-      - internal
+    image: nats:2
+  
+  api-gateway:
+    build:
+      context: ./api-gateway
+    image: master/api-gateway
+    environment:
+      PORT: 3000
+      SERVICEDIR: services
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - nats
+      - vehicles
+      - vehicle_communicator
 
-  traefik:
-    image: traefik:1.7
-    container_name: traefik
-    command:
-      - "--api"
-      - "--docker"
-      - "--docker.watch"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.backend=traefik"
-      - "traefik.port=8080"
-    ports:
-      - 3000:80
-      - 3001:8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /dev/null:/traefik.toml
-    networks:
-      - internal
-      - default
+  postgres:
+    image: postgres:12
+    environment: 
+      POSTGRES_DB: vehicles
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: super_secret
 
-networks:
-  internal:
+  vehicles:
+    build:
+      context: ./vehicles
+    image: master/vehicles
+    environment: 
+      SERVICEDIR: services
+    depends_on:
+      - postgres
+  
+  mongodb:
+    image: mongo:4
+
+  vehicle_communicator:
+    build:
+      context: ./vehicle-communicator
+    image: master/vehicle-communicator
+    environment:
+      SERVICEDIR: services
+    depends_on:
+      - mongodb
+      - vehicles

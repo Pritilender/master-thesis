@@ -3,9 +3,9 @@ const DbService = require('moleculer-db')
 const MongoDBAdapter = require('moleculer-db-adapter-mongo')
 
 module.exports = {
-	name: 'vehicleMessage',
+	name: 'vehicleCommunicator',
 	mixins: [DbService],
-	adapter: new MongoDBAdapter('mongodb://localhost/thesis'),
+	adapter: new MongoDBAdapter('mongodb://mongodb:27017/thesis'),
 	collection: 'messages',
 	/**
 	 * Actions

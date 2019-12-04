@@ -32,7 +32,7 @@ module.exports = {
 
 	// Define transporter. 
 	// More info: https://moleculer.services/docs/0.13/networking.html
-	transporter: 'NATS',
+	transporter: 'nats://nats:4222',
 
 	// Define a serializer. 
 	// Available values: "JSON", "Avro", "ProtoBuf", "MsgPack", "Notepack", "Thrift". 
@@ -135,12 +135,11 @@ module.exports = {
 
 	// Called after broker created.
 	created(broker) {
-		console.log('Broker created')
 	},
 
 	// Called after broker starte.
 	started(broker) {
-		console.log('Broker started')
+		broker.logger.info('Broker started')
 	},
 
 	// Called after broker stopped.
