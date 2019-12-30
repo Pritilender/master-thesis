@@ -70,7 +70,7 @@
         const urlParams = new URLSearchParams(window.location.search)
         const vehicleId = urlParams.get('id')
 
-        fetch(`http://localhost:3000/api/vehicles/${vehicleId}`)
+        fetch(`https://mt.mihajlo.dev/api/vehicles/${vehicleId}`)
 		    .then(response => {
                 if (response.status == 404) {
                     throw new Error(`Vehicle with id ${vehicleId} doesn't exist.`)
