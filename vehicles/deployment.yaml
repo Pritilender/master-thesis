@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt-vehicles
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mt-vehicles
+  template:
+    metadata:
+      name: mt-vehicles
+      labels:
+        app: mt-vehicles
+    spec:
+      containers:
+        - image: miksamixa/mt-vehicles:v3
+          name: vehicles
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256M
+            limits:
+              cpu: 300m
+              memory: 320M            
+          env:
+            - name: SERVICEDIR
+              value: services
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicles
+spec:
+  clusterIP: None
+  selector:
+    app: mt-vehicles

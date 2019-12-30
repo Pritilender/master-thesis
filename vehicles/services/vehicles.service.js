@@ -85,8 +85,10 @@ module.exports = {
 	adapter,
 	model,
 	async started() {
+		if (!process.env.SYNC) return
+		
 		await this.model.sync({force: true})
-		for (let i = 0; i < 50; i++) {
+		for (let i = 0; i < 10; i++) {
 			await this.model.create(vehicleFactory())
 		}
 	}
