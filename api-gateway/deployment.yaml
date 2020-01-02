@@ -18,7 +18,12 @@ spec:
         - image: miksamixa/mt-api-gateway:v2
           name: moleculer-api-gateway
           resources:
-            
+            requests:
+              cpu: 100m
+              memory: 200M
+            limits:
+              cpu: 150m
+              memory: 200M
           env:
             - name: PORT
               value: "3000"

@@ -64,6 +64,15 @@ spec:
               value: dbuser
             - name: POSTGRES_PASSWORD
               value: super_secret
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-d", "vehicles", "-h", "localhost", "-U", "dbuser"]
+            initialDelaySeconds: 20
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-d", "vehicles", "-h", "localhost", "-U", "dbuser"]
+            timeoutSeconds: 5
   volumeClaimTemplates:
     - metadata:
         name: pgdata
