@@ -1,13 +1,13 @@
 'use strict'
 const fetch = require('node-fetch')
-const baseUrl = 'http://localhost:3000/api'
+const baseUrl = 'https://mt.mihajlo.dev/api'
 
 const round = (num) => Number(num.toFixed(5))
 const randomNumber = (min, max) => round(Math.random() * (max - min + 1) + min)
 const sleep = async (seconds) => new Promise((resolve) => setTimeout(() => resolve(), seconds * 1000))
 
 ;(async function() {
-	const vehiclesResponse = await fetch(`${baseUrl}/vehicles?pageSize=35`)
+	const vehiclesResponse = await fetch(`${baseUrl}/vehicles?pageSize=2`)
 	const vehicles = await vehiclesResponse.json()
     
 	const vehicleLocationMap = new Map()
@@ -37,8 +37,7 @@ const sleep = async (seconds) => new Promise((resolve) => setTimeout(() => resol
 				headers: {
 					'Content-Type': 'application/json',
 				},
-			})
-            
+			})            
 			vehicleLocationMap.set(id, { 
 				...data, 
 				lat: round(data.lat + 0.00001), 

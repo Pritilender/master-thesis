@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt-vehicle-communicator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mt-vehicle-communicator
+  template:
+    metadata:
+      name: mt-vehicle-communicator
+      labels:
+        app: mt-vehicle-communicator
+    spec:
+      containers:
+        - image: miksamixa/mt-vehicle-communicator:v1
+          name: vehicle-communicator
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256M
+            limits:
+              cpu: 300m
+              memory: 320M            
+          env:
+            - name: SERVICEDIR
+              value: services
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicle-communicator
+spec:
+  clusterIP: None
+  selector:
+    app: mt-vehicle-communicator
