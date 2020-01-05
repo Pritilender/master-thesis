@@ -81,7 +81,7 @@
 				insertTextCell(tableRow, (new Date(row.receivedAt)).toLocaleString('sr'))
 
 				if (row.original) {
-					insertPreCell(tableRow, JSON.stringify({ original: row.original, parsed: row.parse }, null, 2))
+					insertPreCell(tableRow, JSON.stringify({ original: row.original, parsed: row.parsed }, null, 2))
 				} else {
 					insertPreCell(tableRow, JSON.stringify({ action: row.action }, null, 2))
 				}

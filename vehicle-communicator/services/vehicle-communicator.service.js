@@ -23,10 +23,16 @@ module.exports = {
 		 * 3. { vin: string, location: [number, number], odometer: number, fuel: number }
 		 */
 		async decode(ctx) {
+			const receivedAt = Date.now()
 			const message = this.parseMessage(ctx.params)
 			const vehicle = await this.findVehicle(message.externalId)
-			await this.broker.call('vehicles.update', { id: vehicle.id, ...message })
-			await this.actions.create({ original: ctx.params, parsed: message, receivedAt: Date.now(), vehicleId: vehicle.id })
+			const shouldUpdate = await this.shouldUpdate(vehicle.id, receivedAt)
+			
+			if (shouldUpdate) {
+				await this.broker.call('vehicles.update', { id: vehicle.id, ...message })
+			}
+			
+			await this.actions.create({ original: ctx.params, parsed: message, receivedAt, vehicleId: vehicle.id, updated: shouldUpdate })
 		},
 		/**
 		 * Execute an action on the vehicle. It's either lock or unlock the vehicle.
@@ -93,6 +99,16 @@ module.exports = {
 			const vehicles = await this.broker.call('vehicles.find', { query: { externalId } })
 			// todo: handle case when there's no vehicle with this external ID
 			return vehicles[0]
+		},
+		async lastMessageAt(vehicleId) {
+			const lastMessage = await this.actions.find({ query: { vehicleId, updated: true }, sort: '-receivedAt'})
+
+			return lastMessage.length > 0 && lastMessage[0].receivedAt
+		},
+		async shouldUpdate(vehicleId, currentMessageRecievedAt) {
+			const lastMessageAt = (await this.lastMessageAt(vehicleId)) || 0
+			console.log(currentMessageRecievedAt, lastMessageAt, currentMessageRecievedAt - lastMessageAt > 5 * 60 * 1000)
+			return currentMessageRecievedAt - lastMessageAt > 5 * 60 * 1000 // more than 5 minutes ago
 		}
 	},
 }

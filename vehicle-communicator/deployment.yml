@@ -15,7 +15,7 @@ spec:
         app: mt-vehicle-communicator
     spec:
       containers:
-        - image: miksamixa/mt-vehicle-communicator:v1
+        - image: miksamixa/mt-vehicle-communicator:v6
           name: vehicle-communicator
           resources:
             requests:

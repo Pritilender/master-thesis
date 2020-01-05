@@ -15,7 +15,7 @@ spec:
         app: mt-api-gateway
     spec:
       containers:
-        - image: miksamixa/mt-api-gateway:v2
+        - image: miksamixa/mt-api-gateway:v3
           name: moleculer-api-gateway
           resources:
             requests:
