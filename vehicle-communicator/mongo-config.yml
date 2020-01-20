@@ -97,7 +97,16 @@ resources: {}
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
 
-affinity: {}
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - mongodb-mongodb-replicaset
+        topologyKey: "kubernetes.io/hostname"
 
 tolerations: []
 
