@@ -1,0 +1,15 @@
+config:
+  target: 'https://mt.mihajlo.dev'
+  phases:
+    - duration: 60
+      arrivalRate: 20
+scenarios:
+  - flow:
+    - get:
+        url: '/'
+    - get:
+        url: '/vehicles.html'
+    - get:
+        url: '/vehicle.html?id=2'
+    - get:
+        url: '/api/vehicle-messages?pageSize=100&sort=-receivedAt&query[vehicleId]=2'

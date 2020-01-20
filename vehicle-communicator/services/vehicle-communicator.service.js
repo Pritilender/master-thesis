@@ -5,8 +5,11 @@ const MongoDBAdapter = require('moleculer-db-adapter-mongo')
 module.exports = {
 	name: 'vehicleCommunicator',
 	mixins: [DbService],
-	adapter: new MongoDBAdapter('mongodb://mongodb:27017/thesis'),
+	adapter: new MongoDBAdapter('mongodb://mongodb-mongodb-replicaset-client:27017/thesis?replicaSet=rs0'),
 	collection: 'messages',
+	async afterConnected() {
+		return this.adapter.collection.createIndex({ vehicleId: 1, receivedAt: -1 })
+	},
 	/**
 	 * Actions
 	 */
@@ -32,7 +35,8 @@ module.exports = {
 				await this.broker.call('vehicles.update', { id: vehicle.id, ...message })
 			}
 			
-			await this.actions.create({ original: ctx.params, parsed: message, receivedAt, vehicleId: vehicle.id, updated: shouldUpdate })
+			// saving vehicleId as a string so we can use default list action for querying
+			await this.actions.create({ original: ctx.params, parsed: message, receivedAt, vehicleId: '' + vehicle.id, updated: shouldUpdate })
 		},
 		/**
 		 * Execute an action on the vehicle. It's either lock or unlock the vehicle.

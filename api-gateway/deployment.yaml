@@ -15,14 +15,14 @@ spec:
         app: mt-api-gateway
     spec:
       containers:
-        - image: miksamixa/mt-api-gateway:v3
+        - image: miksamixa/mt-api-gateway:v6
           name: moleculer-api-gateway
           resources:
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 200M
             limits:
-              cpu: 150m
+              cpu: 80m
               memory: 200M
           env:
             - name: PORT
@@ -58,3 +58,16 @@ spec:
           - backend:
               serviceName: api-gateway
               servicePort: 80
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mt-api-gateway-deployment
+spec:
+  maxReplicas: 3
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: mt-api-gateway-deployment
+  targetCPUUtilizationPercentage: 30

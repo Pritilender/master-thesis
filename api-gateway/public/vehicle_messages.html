@@ -71,7 +71,7 @@
 	backToVehicleAnchor.classList.add('navbar-item')
 	document.getElementById('navigation').appendChild(backToVehicleAnchor)
 
-	fetch(`${baseUrl}/vehicle-messages?pageSize=1000&sort=-receivedAt&query=[vehicleId]=${vehicleId}`)
+	fetch(`${baseUrl}/vehicle-messages?pageSize=1000&sort=-receivedAt&query[vehicleId]=${vehicleId}`)
 		.then(response => response.json())
 		.then(json => {
 			const tableRef = document.getElementById('messages')

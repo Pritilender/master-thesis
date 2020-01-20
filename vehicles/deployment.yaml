@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: mt-vehicles
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: mt-vehicles
@@ -15,18 +15,20 @@ spec:
         app: mt-vehicles
     spec:
       containers:
-        - image: miksamixa/mt-vehicles:v3
+        - image: miksamixa/mt-vehicles:v5
           name: vehicles
           resources:
             requests:
-              cpu: 200m
+              cpu: 50m
               memory: 256M
             limits:
-              cpu: 300m
+              cpu: 100m
               memory: 320M            
           env:
             - name: SERVICEDIR
               value: services
+            # - name: SYNC
+            #   value: "true"
 ---
 apiVersion: v1
 kind: Service
@@ -36,3 +38,16 @@ spec:
   clusterIP: None
   selector:
     app: mt-vehicles
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mt-vehicles
+spec:
+  maxReplicas: 3
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: mt-vehicles
+  targetCPUUtilizationPercentage: 60

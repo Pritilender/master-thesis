@@ -3,7 +3,7 @@ const DbService = require('moleculer-db')
 const SqlAdapter = require('moleculer-db-adapter-sequelize')
 const Sequelize = require('sequelize')
 
-const adapter = new SqlAdapter('vehicles', 'dbuser', 'super_secret', { host: 'postgres', dialect: 'postgres' })
+const adapter = new SqlAdapter('vehicles', 'dbuser', 'super_secret', { host: 'postgres-postgresql-ha-pgpool', dialect: 'postgres' })
 
 const randomItem = (items) => items[Math.floor(Math.random() * items.length)]
 

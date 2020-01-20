@@ -15,14 +15,14 @@ spec:
         app: mt-vehicle-communicator
     spec:
       containers:
-        - image: miksamixa/mt-vehicle-communicator:v6
+        - image: miksamixa/mt-vehicle-communicator:v14
           name: vehicle-communicator
           resources:
             requests:
-              cpu: 200m
+              cpu: 50m
               memory: 256M
             limits:
-              cpu: 300m
+              cpu: 100m
               memory: 320M            
           env:
             - name: SERVICEDIR
@@ -36,3 +36,16 @@ spec:
   clusterIP: None
   selector:
     app: mt-vehicle-communicator
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mt-vehicle-communicator
+spec:
+  maxReplicas: 3
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: mt-vehicle-communicator
+  targetCPUUtilizationPercentage: 60

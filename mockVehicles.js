@@ -7,7 +7,7 @@ const randomNumber = (min, max) => round(Math.random() * (max - min + 1) + min)
 const sleep = async (seconds) => new Promise((resolve) => setTimeout(() => resolve(), seconds * 1000))
 
 ;(async function() {
-	const vehiclesResponse = await fetch(`${baseUrl}/vehicles?pageSize=2`)
+	const vehiclesResponse = await fetch(`${baseUrl}/vehicles?pageSize=10`)
 	const vehicles = await vehiclesResponse.json()
     
 	const vehicleLocationMap = new Map()
@@ -23,29 +23,35 @@ const sleep = async (seconds) => new Promise((resolve) => setTimeout(() => resol
     
 	// eslint-disable-next-line no-constant-condition
 	while(true) {
-		for (const [id, data] of vehicleLocationMap) {
-			await fetch(`${baseUrl}/message`, { 
-				method: 'POST', 
-				// todo: cover all message formats
-				body: JSON.stringify({
-					id: data.externalId, 
-					lat: data.lat, 
-					lng: data.lng, 
-					batteryPercentage: data.fuelLevel, 
-					distanceTravelled: data.odometer
-				}),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			})            
-			vehicleLocationMap.set(id, { 
-				...data, 
-				lat: round(data.lat + 0.00001), 
-				lng: round(data.lng + 0.00001), 
-				odometer: data.odometer + 10, 
-				fuelLevel: data.fuelLevel > 10 ? data.fuelLevel - 1 : 85 
-			})
-		}
-		await sleep(5)
+		await Promise.all([...vehicleLocationMap].map(makeRequest(vehicleLocationMap)))
+		// await sleep(5)
 	}
 })()
+
+const makeRequest = (vehicleLocationMap) => async ([id, data]) => {
+	try {
+		await fetch(`${baseUrl}/message`, { 
+			method: 'POST', 
+			// todo: cover all message formats
+			body: JSON.stringify({
+				id: data.externalId, 
+				lat: data.lat, 
+				lng: data.lng, 
+				batteryPercentage: data.fuelLevel, 
+				distanceTravelled: data.odometer
+			}),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})            
+		vehicleLocationMap.set(id, { 
+			...data, 
+			lat: round(data.lat + 0.00001), 
+			lng: round(data.lng + 0.00001), 
+			odometer: data.odometer + 10, 
+			fuelLevel: data.fuelLevel > 10 ? data.fuelLevel - 1 : 85 
+		})
+	} catch (e) {
+		console.log(e.code)
+	}
+}
