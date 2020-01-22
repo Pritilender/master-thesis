@@ -1,34 +1,33 @@
 digraph G {
-    splines=ortho
-
     /* Entities */
     ui [label="UI", shape="rect"]
-    car [label="Car Module", shape=""]
-    scooter [label="Scooter Module", shape=""]
+    car [label="Car", shape=""]
+    
+    vehicleService [label="Vehicle Service", shape="rect", group="vehicle"]
+    vehicleDb [label="SQL DB", shape="cylinder", group="vehicle"]
 
-    vehicles [label="Vehicle Service", shape="rect", group="vehicle"]
-    vehiclesDb [label="SQL DB", shape="cylinder", group="vehicle"]
-    decoder [label="Vehicle Message Decoder Service", shape="rect", group="decoder"]
-    decoderDb [label="MongoDB", shape="cylinder", group="decoder"]
-    analysis [label="Vehicle Info Analysis Service", shape="rect"]
-    email [label="Email Service", shape="rect"]
+    rideService [label="Ride Service", shape="rect", group="ride"]
+    rideDb [label="SQL DB", shape="cylinder", group="ride"]
 
-    apiGateway [label="API Gateway Service", shape="rect", width=5, style="dashed"]
+    telematicsService [label="Telematic Service", shape="rect", group="telematics"]
+    telematicsDb [label="Mongo DB", shape="cylinder", group="telematics"]
+
+    apiGateway [label="API Gateway Service", shape="rect", style="dashed"]
     
     /* Relationships */
     ui -> apiGateway // Vehicle Info, Messages
     car -> apiGateway // Car Info Message
-    scooter -> apiGateway // Scooter Info Message
-    apiGateway -> decoder // New Message, List all Messages
-    apiGateway -> vehicles // CRUD Operations for Vehicles
-    decoder -> vehicles // Update Vehicle
-    decoder -> analysis // Analyse Message for Known Patterns (e.g. Fuel Level Alert)
-    analysis -> email // Send Email for Found Pattern
-    email -> vehicles // Vehicle Info
 
-    decoder -> decoderDb
-    vehicles -> vehiclesDb
+    vehicleService -> vehicleDb
 
-    { rank=same ui car scooter }
-    { rank=same vehicles decoder }
+    telematicsService -> vehicleService
+    telematicsService -> telematicsDb
+    
+    apiGateway -> rideService
+    apiGateway -> vehicleService
+    apiGateway -> telematicsService
+
+    rideService -> rideDb
+    rideService -> vehicleService
+    rideService -> telematicsService
 }
