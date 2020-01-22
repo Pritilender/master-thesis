@@ -1,8 +1,8 @@
 config:
   target: 'https://mt.mihajlo.dev'
   phases:
-    - duration: 60
-      arrivalRate: 20
+    - duration: 120
+      arrivalRate: 10
 scenarios:
   - flow:
     - get:
