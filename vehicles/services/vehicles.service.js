@@ -2,80 +2,80 @@
 const DbService = require('moleculer-db')
 const SqlAdapter = require('moleculer-db-adapter-sequelize')
 const Sequelize = require('sequelize')
+const exampleVehicles = require('../seeds/vehicles.json')
 
-const adapter = new SqlAdapter('vehicles', 'dbuser', 'super_secret', { host: 'postgres-postgresql-ha-pgpool', dialect: 'postgres' })
-
-const randomItem = (items) => items[Math.floor(Math.random() * items.length)]
-
-const vehicleFactory = () => {
-	const brands = ['BMW', 'Toyota', 'Hyundai', 'Mercedes', 'Ford', 'Segway']
-	const models = ['X1', 'X2', 'Accord', 'Corola', '500', 'CL', 'Tucson', 'i30', 'M520', '123']
-	const fuelTypes = ['electric', 'hybrid', 'euro 6', 'gasolin']
-	const type = ['scooter', 'car', 'car', 'car']
-	
-	const vehicle = {
-		name: randomItem(brands) + ' ' + randomItem(models),
-		type: randomItem(type),
-		externalId: Math.floor(Math.random() * 1000000000000 + Date.now()),
-	}
-
-	vehicle.fuelType = vehicle.type == 'scooter' ? 'electric' : randomItem(fuelTypes)
-
-	return vehicle
-}
+const { DB_USER, DB_PASSWORD, DB_HOST } = process.env
+const adapter = new SqlAdapter('vehicles', DB_USER, DB_PASSWORD, { host: DB_HOST, dialect: 'postgres' })
 
 const model = {
 	name: 'vehicle',
 	define: {
-		name: {
+		make: {
 			type: Sequelize.STRING,
 			allowNull: false,
 		},
-		externalId: {
+		model: {
 			type: Sequelize.STRING,
 			allowNull: false,
-			unique: true,
 		},
 		type: {
 			type: Sequelize.STRING,
 			allowNull: false,
 		},
+		seatCount: {
+			type: Sequelize.INTEGER,
+			allowNull: false,
+			validate: {
+				min: 1
+			}
+		},
 		fuelType: {
 			type: Sequelize.STRING,
-			allowNUll: false,
+			allowNull: false,
+		},
+		licensePlate: {
+			type: Sequelize.STRING,
+			allowNull: false,
 		},
 		fuelLevel: {
 			type: Sequelize.INTEGER,
 			allowNull: false,
-			defaultValue: 50,
-			// validate: {
-			// 	min: 0,
-			// 	max: 100,
-			// },
+			defaultValue: 0,
+			validate: {
+				min: 0,
+				max: 100,
+			},
 		},
-		location: Sequelize.JSONB,
+		location: Sequelize.JSONB,   
 		totalDistance: {
 			type: Sequelize.BIGINT,
 			allowNull: false,
 			defaultValue: 0,
-			validate: {
-				min: 0,
-			}
 		},
-		state: {
-			type: Sequelize.STRING,
-			defaultValue: 'locked',
+		totalPassangerCount: {
+			type: Sequelize.INTEGER,
 			allowNull: false,
+			defaultValue: 0
+		},
+		totalRides: {
+			type: Sequelize.INTEGER,
+			allowNull: false,
+			defaultValue: 0
+		},
+		availability: {
+			type: Sequelize.BOOLEAN,
+			allowNull: false,
+			defaultValue: false,
+		},
+		alert: {
+			type: Sequelize.STRING,
+			allowNull: true,
 		}
 	},
 	options: {
 		timestamps: true,
 		version: true,
 		underscored: true,
-		paranoid: true,
-		synce: {
-			force: true,
-		}
 	}
 }
 
@@ -85,11 +85,12 @@ module.exports = {
 	adapter,
 	model,
 	async started() {
-		if (!process.env.SYNC) return
-		
+		if (process.env.SYNC != 'true') return
+
 		await this.model.sync({force: true})
-		for (let i = 0; i < 10; i++) {
-			await this.model.create(vehicleFactory())
+		
+		for (const vehicle of exampleVehicles) {
+			await this.model.create(vehicle)
 		}
 	}
 }

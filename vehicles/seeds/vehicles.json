@@ -1,0 +1,66 @@
+[
+    {
+        "make": "Mercedes",
+        "model": "A220",
+        "type": "sedan",
+        "seatCount": 4,
+        "fuelType": "gas",
+        "licensePlate": "NI123TX"
+    },
+    {
+        "make": "BMW",
+        "model": "430i",
+        "type": "sedan",
+        "seatCount": 3,
+        "fuelType": "gas",
+        "licensePlate": "NI234TX"
+    },
+    {
+        "make": "BMW",
+        "model": "330i",
+        "type": "sedan",
+        "seatCount": 4,
+        "fuelType": "gas",
+        "licensePlate": "NI345TX"
+    },
+    {
+        "make": "BMW",
+        "model": "530i",
+        "type": "sedan",
+        "seatCount": 4,
+        "fuelType": "diesel",
+        "licensePlate": "NI443TX"
+    },
+    {
+        "make": "Cadillac",
+        "model": "CT5",
+        "type": "sedan",
+        "seatCount": 3,
+        "fuelType": "gas",
+        "licensePlate": "NI112TX"
+    },
+    {
+        "make": "Chevrolet",
+        "model": "Impala LT",
+        "type": "sedan",
+        "seatCount": 4,
+        "fuelType": "diesel",
+        "licensePlate": "NI392TX"
+    },
+    {
+        "make": "Ford",
+        "model": "Transit Connect",
+        "type": "minivan",
+        "seatCount": 8,
+        "fuelType": "diesel",
+        "licensePlate": "NI238TX"
+    },
+    {
+        "make": "Kia",
+        "model": "Sedona",
+        "type": "minivan",
+        "seatCount": 9,
+        "fuelType": "gas",
+        "licensePlate": "NI423TX"
+    }
+]
