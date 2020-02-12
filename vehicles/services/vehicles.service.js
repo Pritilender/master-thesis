@@ -10,6 +10,11 @@ const adapter = new SqlAdapter('vehicles', DB_USER, DB_PASSWORD, { host: DB_HOST
 const model = {
 	name: 'vehicle',
 	define: {
+		vin: {
+			type: Sequelize.STRING,
+			alloowNull: false,
+			unique: true,
+		},
 		make: {
 			type: Sequelize.STRING,
 			allowNull: false,

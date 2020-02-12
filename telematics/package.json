@@ -1,7 +1,7 @@
 {
   "name": "master",
   "version": "1.0.0",
-  "description": "API Gateway service.",
+  "description": "Telamtics message service.",
   "scripts": {
     "dev": "moleculer-runner --repl --hot services",
     "start": "moleculer-runner",

@@ -16,7 +16,7 @@ services:
     depends_on:
       - nats-client
       - vehicles
-      # - vehicle_communicator
+      - telematics
 
   postgres:
     image: postgres:12
@@ -34,20 +34,22 @@ services:
       DB_HOST: postgres
       DB_USER: dbuser
       DB_PASSWORD: super_secret
-      SYNC: 'true'
+      SYNC: 'false'
     depends_on:
       - nats-client
       - postgres
   
-  # mongodb:
-  #   image: mongo:4
+  mongodb:
+    image: mongo:4
 
-  # vehicle_communicator:
-  #   build:
-  #     context: ./vehicle-communicator
-  #   image: master/vehicle-communicator
-  #   environment:
-  #     SERVICEDIR: services
-  #   depends_on:
-  #     - mongodb
-  #     - vehicles
+  telematics:
+    build:
+      context: ./telematics
+    image: master/telematics
+    environment:
+      SERVICEDIR: services
+      DB_URL: mongodb://mongodb:27017/thesis
+    depends_on:
+      - nats-client
+      - mongodb
+      - vehicles

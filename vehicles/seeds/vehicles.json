@@ -1,5 +1,6 @@
 [
     {
+        "vin": "WDB111231XXM",
         "make": "Mercedes",
         "model": "A220",
         "type": "sedan",
@@ -8,6 +9,7 @@
         "licensePlate": "NI123TX"
     },
     {
+        "vin": "WBA1238491MH",
         "make": "BMW",
         "model": "430i",
         "type": "sedan",
@@ -16,6 +18,7 @@
         "licensePlate": "NI234TX"
     },
     {
+        "vin": "WBA12312344MH",
         "make": "BMW",
         "model": "330i",
         "type": "sedan",
@@ -24,6 +27,7 @@
         "licensePlate": "NI345TX"
     },
     {
+        "vin": "WBA1238491XH",
         "make": "BMW",
         "model": "530i",
         "type": "sedan",
@@ -32,6 +36,7 @@
         "licensePlate": "NI443TX"
     },
     {
+        "vin": "WDC11001100US",
         "make": "Cadillac",
         "model": "CT5",
         "type": "sedan",
@@ -40,6 +45,7 @@
         "licensePlate": "NI112TX"
     },
     {
+        "vin": "1GC11002002US",
         "make": "Chevrolet",
         "model": "Impala LT",
         "type": "sedan",
@@ -48,6 +54,7 @@
         "licensePlate": "NI392TX"
     },
     {
+        "vin": "1F1110010023",
         "make": "Ford",
         "model": "Transit Connect",
         "type": "minivan",
@@ -56,6 +63,7 @@
         "licensePlate": "NI238TX"
     },
     {
+        "vin": "3KP1212120302",
         "make": "Kia",
         "model": "Sedona",
         "type": "minivan",

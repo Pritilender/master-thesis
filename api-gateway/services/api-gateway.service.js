@@ -14,9 +14,9 @@ module.exports = {
 				path: '/api',
 				aliases: {
 					'REST vehicles': 'vehicles',
-					'POST message': 'vehicleCommunicator.decode',
-					'POST action': 'vehicleCommunicator.executeAction',
-					'GET vehicle-messages': 'vehicleCommunicator.list',
+					'POST vehicles/:vin/messages': 'telematics.decode',
+					'GET vehicles/:vehicleId/messages': 'telematics.listMessages',
+					'GET vehicles/:vehicleId/messages/last': 'telematics.lastMessage',
 				}
 			},
 		],
