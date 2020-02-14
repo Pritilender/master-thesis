@@ -12,7 +12,7 @@ const model = {
 	define: {
 		vin: {
 			type: Sequelize.STRING,
-			alloowNull: false,
+			allowNull: false,
 			unique: true,
 		},
 		make: {
@@ -96,6 +96,18 @@ module.exports = {
 		
 		for (const vehicle of exampleVehicles) {
 			await this.model.create(vehicle)
+		}
+	},
+	actions: {
+		availableVehicles(ctx) {
+			return this.actions.find({ 
+				query: { 
+					availability: true, 
+					seatCount: { 
+						[Sequelize.Op.gte]: ctx.params.seatCount
+					}
+				}
+			})
 		}
 	}
 }

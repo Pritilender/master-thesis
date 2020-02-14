@@ -16,7 +16,9 @@ module.exports = {
 					'REST vehicles': 'vehicles',
 					'POST vehicles/:vin/messages': 'telematics.decode',
 					'GET vehicles/:vehicleId/messages': 'telematics.listMessages',
-					'GET vehicles/:vehicleId/messages/last': 'telematics.lastMessage',
+					'POST rides': 'rides.startRide',
+					'PUT rides/:rideId/status': 'rides.endRide',
+					'GET rides': 'rides.list',
 				}
 			},
 		],

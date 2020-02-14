@@ -8,7 +8,8 @@ module.exports = {
 	adapter: new MongoDBAdapter(process.env.DB_URL),
 	collection: 'messages',
 	async afterConnected() {
-		return this.adapter.collection.createIndex({ vehicleId: 1, receivedAt: -1 })
+		await this.adapter.collection.createIndex({ vehicleId: 1, receivedAt: -1 })
+		await this.adapter.collection.createIndex({ location: '2dsphere' })
 	},
 	/**
 	 * Actions
@@ -39,10 +40,11 @@ module.exports = {
 			return this.actions.list({ query: { vehicleId }, ...rest })
 		},
 		async lastMessage(ctx) {
-			const vehicleId = ctx.params.vehicleId
+			const vehicleId = '' + ctx.params.vehicleId
 			const messages = await this.actions.find({ query: { vehicleId }, sort: '-receivedAt', limit: 1 })
-			return messages[0]
-		}
+			// returning vehicleId as a number
+			return { ...messages[0], vehicleId: parseInt(messages[0].vehicleId, 10) }
+		},
 	},
 	/**
 	 * Methods
@@ -52,8 +54,8 @@ module.exports = {
 			return {
 				vin: message.vin,
 				location: {
-					lat: message.lat,
-					lng: message.lng,
+					type: 'Point',
+					coordinates: [message.lng, message.lat],
 				},
 				fuelLevel: message.fuelLevel,
 				odometer: message.odometer,

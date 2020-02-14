@@ -17,6 +17,7 @@ services:
       - nats-client
       - vehicles
       - telematics
+      - rides
 
   postgres:
     image: postgres:12
@@ -53,3 +54,27 @@ services:
       - nats-client
       - mongodb
       - vehicles
+
+  postgres_rides:
+    image: postgres:12
+    environment: 
+      POSTGRES_DB: rides
+      POSTGRES_USER: dbuser_rides
+      POSTGRES_PASSWORD: super_secret_rides
+  
+  rides:
+    build:
+      context: ./rides
+    image: master/rides
+    environment: 
+      SERVICEDIR: services
+      DB_HOST: postgres_rides
+      DB_USER: dbuser_rides
+      DB_PASSWORD: super_secret_rides
+      SYNC: 'false'
+    depends_on:
+      - nats-client
+      - postgres_rides
+      - telematics
+      - vehicles
+
