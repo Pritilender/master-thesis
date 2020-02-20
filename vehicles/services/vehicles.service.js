@@ -2,87 +2,11 @@
 const DbService = require('moleculer-db')
 const SqlAdapter = require('moleculer-db-adapter-sequelize')
 const Sequelize = require('sequelize')
+const { model } = require('../models/vehicle.model')
 const exampleVehicles = require('../seeds/vehicles.json')
 
 const { DB_USER, DB_PASSWORD, DB_HOST } = process.env
-const adapter = new SqlAdapter('vehicles', DB_USER, DB_PASSWORD, { host: DB_HOST, dialect: 'postgres' })
-
-const model = {
-	name: 'vehicle',
-	define: {
-		vin: {
-			type: Sequelize.STRING,
-			allowNull: false,
-			unique: true,
-		},
-		make: {
-			type: Sequelize.STRING,
-			allowNull: false,
-		},
-		model: {
-			type: Sequelize.STRING,
-			allowNull: false,
-		},
-		type: {
-			type: Sequelize.STRING,
-			allowNull: false,
-		},
-		seatCount: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-			validate: {
-				min: 1
-			}
-		},
-		fuelType: {
-			type: Sequelize.STRING,
-			allowNull: false,
-		},
-		licensePlate: {
-			type: Sequelize.STRING,
-			allowNull: false,
-		},
-		fuelLevel: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-			defaultValue: 0,
-			validate: {
-				min: 0,
-				max: 100,
-			},
-		},
-		location: Sequelize.JSONB,   
-		totalDistance: {
-			type: Sequelize.BIGINT,
-			allowNull: false,
-			defaultValue: 0,
-		},
-		totalPassangerCount: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-			defaultValue: 0
-		},
-		totalRides: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-			defaultValue: 0
-		},
-		availability: {
-			type: Sequelize.BOOLEAN,
-			allowNull: false,
-			defaultValue: false,
-		},
-		alert: {
-			type: Sequelize.STRING,
-			allowNull: true,
-		}
-	},
-	options: {
-		timestamps: true,
-		version: true,
-		underscored: true,
-	}
-}
+const adapter = new SqlAdapter('vehicles', DB_USER, DB_PASSWORD, { host: DB_HOST, dialect: 'postgres', logging: false })
 
 module.exports = {
 	name: 'vehicles',
@@ -99,15 +23,24 @@ module.exports = {
 		}
 	},
 	actions: {
-		availableVehicles(ctx) {
+		async findByVin({ params }) {
+			return (await this.actions.find({ query: { vin: params.vin } }))[0]
+		},
+		availableVehicles({ params }) {
 			return this.actions.find({ 
 				query: { 
 					availability: true, 
 					seatCount: { 
-						[Sequelize.Op.gte]: ctx.params.seatCount
+						[Sequelize.Op.gte]: params.seatCount
 					}
 				}
 			})
+		},
+		bookVehicle({ params }) {
+			return this.actions.update({ id: params.id, availability: false })
+		},
+		releaseVehicle({ params }) {
+			return this.actions.update({ id: params.id, availability: true })
 		}
 	}
 }

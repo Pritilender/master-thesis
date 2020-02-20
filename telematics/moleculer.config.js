@@ -1,4 +1,5 @@
 'use strict'
+const { Middlewares } = require('moleculer')
 
 /**
  * Moleculer ServiceBroker configuration file
@@ -22,13 +23,12 @@ module.exports = {
 	nodeID: null,
 
 	// Enable/disable logging or use custom logger. More info: https://moleculer.services/docs/0.13/logging.html
-	logger: true,
-	// Log level for built-in console logger. Available values: trace, debug, info, warn, error, fatal
-	logLevel: 'info',
-	// Log formatter for built-in console logger. Available values: default, simple, short. It can be also a `Function`.
-	logFormatter: 'default',
-	// Custom object & array printer for built-in console logger.
-	logObjectPrinter: null,
+	logger: {
+		type: 'Console',
+		options: {
+			formatter: 'short'
+		}
+	},
 
 	// Define transporter. 
 	// More info: https://moleculer.services/docs/0.13/networking.html
@@ -113,9 +113,7 @@ module.exports = {
 	},
 
 	// Enable parameters validation. More info: https://moleculer.services/docs/0.13/validating.html
-	validation: true,
-	// Custom Validator class for validation.
-	validator: null,
+	validator: false,
 
 	// Enable metrics function. More info: https://moleculer.services/docs/0.13/metrics.html
 	metrics: false,
@@ -131,7 +129,16 @@ module.exports = {
 	hotReload: false,
 
 	// Register custom middlewares
-	middlewares: [],
+	middlewares: [
+		{
+			call(next) {
+				return (actionName, params, opts) => {
+					this.logger.info(`Call '${actionName}' action`)
+					return next(actionName, params, opts)
+				}
+			}
+		}
+	],
 
 	// Called after broker created.
 	created(broker) {

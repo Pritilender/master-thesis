@@ -22,13 +22,12 @@ module.exports = {
 	nodeID: null,
 
 	// Enable/disable logging or use custom logger. More info: https://moleculer.services/docs/0.13/logging.html
-	logger: true,
-	// Log level for built-in console logger. Available values: trace, debug, info, warn, error, fatal
-	logLevel: 'info',
-	// Log formatter for built-in console logger. Available values: default, simple, short. It can be also a `Function`.
-	logFormatter: 'default',
-	// Custom object & array printer for built-in console logger.
-	logObjectPrinter: null,
+	logger: {
+		type: 'Console',
+		options: {
+			formatter: 'short'
+		}
+	},
 
 	// Define transporter. 
 	// More info: https://moleculer.services/docs/0.13/networking.html
@@ -89,7 +88,7 @@ module.exports = {
 	// Settings of Circuit Breaker. More info: https://moleculer.services/docs/0.13/fault-tolerance.html#Circuit-Breaker
 	circuitBreaker: {
 		// Enable feature
-		enabled: false,
+		enabled: true,
 		// Threshold value. 0.5 means that 50% should be failed for tripping.
 		threshold: 0.5,
 		// Minimum request count. Below it, CB does not trip.
@@ -113,9 +112,7 @@ module.exports = {
 	},
 
 	// Enable parameters validation. More info: https://moleculer.services/docs/0.13/validating.html
-	validation: true,
-	// Custom Validator class for validation.
-	validator: null,
+	validator: false,
 
 	// Enable metrics function. More info: https://moleculer.services/docs/0.13/metrics.html
 	metrics: false,
@@ -131,7 +128,16 @@ module.exports = {
 	hotReload: false,
 
 	// Register custom middlewares
-	middlewares: [],
+	middlewares: [
+		{
+			call(next) {
+				return (actionName, params, opts) => {
+					this.logger.info(`Call '${actionName}' action`)
+					return next(actionName, params, opts)
+				}
+			}
+		}
+	],
 
 	// Called after broker created.
 	created(broker) {

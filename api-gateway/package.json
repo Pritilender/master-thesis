@@ -17,11 +17,11 @@
   "author": "Mihajlo Ilijic",
   "devDependencies": {
     "eslint": "^6.1.0",
-    "moleculer-repl": "^0.5.7"
+    "moleculer-repl": "^0.6.2"
   },
   "dependencies": {
-    "moleculer": "^0.13.9",
-    "moleculer-web": "^0.8.5",
+    "moleculer": "^0.14.0",
+    "moleculer-web": "^0.9.0",
     "nats": "^1.3.0"
   },
   "engines": {

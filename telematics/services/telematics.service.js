@@ -15,10 +15,10 @@ module.exports = {
 	 * Actions
 	 */
 	actions: {
-		async decode(ctx) {
+		async decode({ params }) {
 			const receivedAt = Date.now()
-			const message = this.parseMessage(ctx.params)
-			const vehicle = await this.findVehicle(ctx.params.vin)
+			const message = this.parseMessage(params)
+			const vehicle = await this.broker.call('vehicles.findByVin', { vin: params.vin })
 			const shouldUpdate = await this.shouldUpdate(vehicle.id + '', message)
 			
 			if (shouldUpdate) {
@@ -27,7 +27,7 @@ module.exports = {
 			
 			// saving vehicleId as a string so we can use default list action for querying
 			await this.actions.create({ 
-				original: ctx.params, 
+				original: params, 
 				parsed: message, 
 				receivedAt, 
 				vehicleId: '' + vehicle.id,
@@ -35,12 +35,12 @@ module.exports = {
 				alert: this.alert(message)
 			})
 		},
-		async listMessages(ctx) {
-			const { vehicleId, query, ...rest } = ctx.params
+		async listMessages({ params }) {
+			const { vehicleId, query: _query, ...rest } = params
 			return this.actions.list({ query: { vehicleId }, ...rest })
 		},
-		async lastMessage(ctx) {
-			const vehicleId = '' + ctx.params.vehicleId
+		async lastMessage({ params }) {
+			const vehicleId = '' + params.vehicleId
 			const messages = await this.actions.find({ query: { vehicleId }, sort: '-receivedAt', limit: 1 })
 			// returning vehicleId as a number
 			return { ...messages[0], vehicleId: parseInt(messages[0].vehicleId, 10) }
@@ -79,11 +79,6 @@ module.exports = {
 			if(this.isFuelLow(parsedMessage)) alerts.push('low_fuel')
 
 			return alerts.join(',')
-		},
-		async findVehicle(vin) {
-			const vehicles = await this.broker.call('vehicles.find', { query: { vin } })
-			// todo: handle case when there's no vehicle with this external ID
-			return vehicles[0]
 		},
 		async shouldUpdate(vehicleId, parsedMessage) {
 			return (await this.isNthMessage(vehicleId)) || this.isSpeedOverLimit(parsedMessage) || this.isFuelLow(parsedMessage)	
