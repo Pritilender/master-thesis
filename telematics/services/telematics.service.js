@@ -1,10 +1,11 @@
 'use strict'
 const DbService = require('moleculer-db')
 const MongoDBAdapter = require('moleculer-db-adapter-mongo')
+const ApiService = require('moleculer-web')
 
 module.exports = {
 	name: 'telematics',
-	mixins: [DbService],
+	mixins: [DbService, ApiService],
 	adapter: new MongoDBAdapter(process.env.DB_URL),
 	collection: 'messages',
 	async afterConnected() {
@@ -45,6 +46,9 @@ module.exports = {
 			// returning vehicleId as a number
 			return { ...messages[0], vehicleId: parseInt(messages[0].vehicleId, 10) }
 		},
+		async health({ params }) {
+			await this.actions.list({ pageSize: 1})
+		}
 	},
 	/**
 	 * Methods
@@ -84,4 +88,16 @@ module.exports = {
 			return (await this.isNthMessage(vehicleId)) || this.isSpeedOverLimit(parsedMessage) || this.isFuelLow(parsedMessage)	
 		},
 	},
+	// Health Check
+	settings: {
+		port: process.env.PORT || 8888,
+		routes: [
+			{
+				path: '/telematics',
+				aliases: {
+					'GET health': 'telematics.health'
+				}
+			},
+		],
+	}
 }

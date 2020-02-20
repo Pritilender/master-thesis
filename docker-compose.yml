@@ -36,6 +36,8 @@ services:
       DB_USER: dbuser
       DB_PASSWORD: super_secret
       SYNC: 'false'
+    ports: 
+      - "8888:8888"
     depends_on:
       - nats-client
       - postgres
@@ -50,6 +52,8 @@ services:
     environment:
       SERVICEDIR: services
       DB_URL: mongodb://mongodb:27017/thesis
+    ports: 
+      - "8800:8888"
     depends_on:
       - nats-client
       - mongodb
@@ -72,6 +76,8 @@ services:
       DB_USER: dbuser_rides
       DB_PASSWORD: super_secret_rides
       SYNC: 'false'
+    ports: 
+      - "8008:8888"
     depends_on:
       - nats-client
       - postgres_rides

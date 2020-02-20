@@ -1,6 +1,7 @@
 'use strict'
 const DbService = require('moleculer-db')
 const SqlAdapter = require('moleculer-db-adapter-sequelize')
+const ApiService = require('moleculer-web')
 const Sequelize = require('sequelize')
 const { model } = require('../models/vehicle.model')
 const exampleVehicles = require('../seeds/vehicles.json')
@@ -10,7 +11,7 @@ const adapter = new SqlAdapter('vehicles', DB_USER, DB_PASSWORD, { host: DB_HOST
 
 module.exports = {
 	name: 'vehicles',
-	mixins: [DbService],
+	mixins: [DbService, ApiService],
 	adapter,
 	model,
 	async started() {
@@ -41,6 +42,21 @@ module.exports = {
 		},
 		releaseVehicle({ params }) {
 			return this.actions.update({ id: params.id, availability: true })
+		},
+		async health({ params }) {
+			await this.actions.list({ pageSize: 1})
 		}
+	},
+	// Health Check
+	settings: {
+		port: process.env.PORT || 8888,
+		routes: [
+			{
+				path: '/vehicles',
+				aliases: {
+					'GET health': 'vehicles.health'
+				}
+			},
+		],
 	}
 }

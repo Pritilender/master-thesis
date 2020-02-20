@@ -3,13 +3,14 @@ const DbService = require('moleculer-db')
 const SqlAdapter = require('moleculer-db-adapter-sequelize')
 const { model } = require('../models/ride.model')
 const { MoleculerError } = require('moleculer').Errors
+const ApiService = require('moleculer-web')
 
 const { DB_USER, DB_PASSWORD, DB_HOST } = process.env
 const adapter = new SqlAdapter('rides', DB_USER, DB_PASSWORD, { host: DB_HOST, dialect: 'postgres', logging: false })
 
 module.exports = {
 	name: 'rides',
-	mixins: [DbService],
+	mixins: [DbService, ApiService],
 	adapter,
 	model,
 	async started() {
@@ -38,6 +39,9 @@ module.exports = {
 
 			await this.actions.update({ id: params.rideId, endedAt: Date.now(), status: 'ended' })
 			await this.broker.call('vehicles.releaseVehicle', { id: ride.vehicleId })
+		},
+		async health({ params }) {
+			await this.actions.list({ pageSize: 1})
 		}
 	},
 	methods: {
@@ -52,5 +56,17 @@ module.exports = {
 
 			return vehicles.find(v => v.id == closestId)
 		}
+	},
+	// Health Check
+	settings: {
+		port: process.env.PORT || 8888,
+		routes: [
+			{
+				path: '/rides',
+				aliases: {
+					'GET health': 'rides.health'
+				}
+			},
+		],
 	}
 }

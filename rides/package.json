@@ -23,10 +23,11 @@
     "moleculer": "^0.14.0",
     "moleculer-db": "^0.8.5",
     "moleculer-db-adapter-sequelize": "^0.2.5",
+    "moleculer-web": "^0.9.0",
+    "nats": "^1.3.0",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.21.2",
-    "nats": "^1.3.0"
+    "sequelize": "^5.21.2"
   },
   "engines": {
     "node": ">= 12.x.x"
