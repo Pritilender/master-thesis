@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foober
+  template:
+    metadata:
+      name: api-gateway
+      labels:
+        app: foober
+    spec:
+      containers:
+        - image: miksamixa/foober-api-gateway:v1
+          name: api-gateway
+          resources:
+            requests:
+              cpu: 50m
+              memory: 200M
+            limits:
+              cpu: 80m
+              memory: 200M
+          env:
+            - name: PORT
+              value: "3000"
+            - name: SERVICEDIR
+              value: services
+          ports:
+            - containerPort: 3000
