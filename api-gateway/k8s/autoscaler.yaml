@@ -9,4 +9,4 @@ spec:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: api-gateway
-  targetCPUUtilizationPercentage: 60
+  targetCPUUtilizationPercentage: 70

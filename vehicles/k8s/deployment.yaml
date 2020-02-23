@@ -18,10 +18,10 @@ spec:
           name: vehicles
           resources:
             requests:
-              cpu: 50m
+              cpu: 100m
               memory: 256M
             limits:
-              cpu: 100m
+              cpu: 200m
               memory: 320M
           env:
             - name: SERVICEDIR
@@ -29,7 +29,7 @@ spec:
             - name: SYNC
               value: "false"
             - name: DB_HOST
-              value: vehicles-db-postgresql-ha-postgresql
+              value: vehicles-db-postgresql-ha-pgpool
             - name: DB_USER
               value: dbuser
             - name: DB_PASSWORD
