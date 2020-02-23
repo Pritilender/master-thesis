@@ -1,0 +1,13 @@
+replicas: 3
+port: 27017
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - telematics-db-mongodb-replicaset
+        topologyKey: "kubernetes.io/hostname"
