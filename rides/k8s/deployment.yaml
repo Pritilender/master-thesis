@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rides
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foober
+  template:
+    metadata:
+      name: rides
+      labels:
+        app: foober
+    spec:
+      containers:
+        - image: miksamixa/foober-rides:v1
+          name: rides
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256M
+            limits:
+              cpu: 100m
+              memory: 320M
+          env:
+            - name: SERVICEDIR
+              value: services
+            - name: SYNC
+              value: "false"
+            - name: DB_HOST
+              value: rides-db-postgresql-ha-pgpool
+            - name: DB_USER
+              value: dbuser
+            - name: DB_PASSWORD
+              value: super_secret

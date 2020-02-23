@@ -1,0 +1,69 @@
+## PostgreSQL parameters
+##
+postgresql:
+  ## Number of replicas to deploy
+  ##
+  replicaCount: 3
+
+  ## Update strategy for PostgreSQL statefulset
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
+  ##
+  updateStrategyType: RollingUpdate
+
+  ## Additional pod annotations
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+
+  ## Affinity for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - rides-db-postgresql-ha-postgresql
+          topologyKey: "kubernetes.io/hostname"
+
+  ## Node labels for pod assignment. Evaluated as a template.
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Tolerations for pod assignment. Evaluated as a template.
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: {}
+
+  ## K8s Security Context
+  ## https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  ##
+  securityContext:
+    enabled: true
+    fsGroup: 1001
+    runAsUser: 1001
+
+  ## PostgreSQL containers' resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+  ## PostgreSQL configuration parameters
+  ##
+  username: dbuser
+  password: super_secret
+  database: rides
