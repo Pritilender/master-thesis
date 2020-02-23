@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicles
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foober
+  template:
+    metadata:
+      name: vehicles
+      labels:
+        app: foober
+    spec:
+      containers:
+        - image: miksamixa/foober-vehicles:v1
+          name: vehicles
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256M
+            limits:
+              cpu: 100m
+              memory: 320M
+          env:
+            - name: SERVICEDIR
+              value: services
+            - name: SYNC
+              value: "false"
+            - name: DB_HOST
+              value: vehicles-db-postgresql-ha-postgresql
+            - name: DB_USER
+              value: dbuser
+            - name: DB_PASSWORD
+              value: super_secret
