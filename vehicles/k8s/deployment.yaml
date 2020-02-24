@@ -6,12 +6,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: foober
+      app: foober-vehicles
   template:
     metadata:
       name: vehicles
       labels:
-        app: foober
+        app: foober-vehicles
     spec:
       containers:
         - image: miksamixa/foober-vehicles:v1

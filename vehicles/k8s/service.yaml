@@ -5,4 +5,4 @@ metadata:
 spec:
   clusterIP: None
   selector:
-    app: foober
+    app: foober-vehicles

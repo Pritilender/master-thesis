@@ -6,12 +6,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: foober
+      app: foober-api-gateway
   template:
     metadata:
       name: api-gateway
       labels:
-        app: foober
+        app: foober-api-gateway
     spec:
       containers:
         - image: miksamixa/foober-api-gateway:v1

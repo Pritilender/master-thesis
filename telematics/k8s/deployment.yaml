@@ -6,12 +6,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: foober
+      app: foober-telematics
   template:
     metadata:
       name: telematics
       labels:
-        app: foober
+        app: foober-telematics
     spec:
       containers:
         - image: miksamixa/foober-telematics:v1

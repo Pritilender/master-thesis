@@ -1,3 +1,4 @@
+# services are not needed for Moleculer to work
 apiVersion: v1
 kind: Service
 metadata:
@@ -5,7 +6,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: foober
+    app: foober-api-gateway
   ports:
   - port: 80
     targetPort: 3000

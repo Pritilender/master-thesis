@@ -6,12 +6,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: foober
+      app: foober-rides
   template:
     metadata:
       name: rides
       labels:
-        app: foober
+        app: foober-rides
     spec:
       containers:
         - image: miksamixa/foober-rides:v1
