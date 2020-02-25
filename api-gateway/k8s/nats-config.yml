@@ -1,5 +1,5 @@
 ## NATS replicas
-replicaCount: 3
+replicaCount: 1
 
 ## Client Authentication
 ## ref: https://github.com/nats-io/gnatsd#authentication

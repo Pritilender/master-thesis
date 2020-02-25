@@ -1,15 +1,119 @@
 config:
-  target: 'https://mt.mihajlo.dev'
+  target: https://foober.mihajlo.dev/api
+  http:
+    timeout: 15
   phases:
-    - duration: 120
+    - duration: 60
       arrivalRate: 10
+  payload:
+    - path: "vehicles.csv"
+      fields:
+        - make
+        - model
+        - type
+        - seatCount
+        - fuelType
+        - licensePlate
+      skipHeader: true
+    - path: "messages.csv"
+      fields:
+        - lng
+        - lat
+        - fuelLevel
+        - odometer
+        - speed
+      skipHeader: true
 scenarios:
-  - flow:
+  - name: "New vehicle"
+    weight: 1
+    flow:
+    - post:
+        url: "/vehicles"
+        json:
+          vin: "{{ $randomString() }}"
+          make: "{{ make }}"
+          model: "{{ model }}"
+          type: "{{ type }}"
+          seatCount: "{{ seatCount }}"
+          fuelType: "{{ fuelType }}"
+          licensePlate: "{{ $randomString() }}"
+        capture:
+          json: "$.id"
+          as: "vehicleId"
+  - name: "Send message"
+    weight: 10
+    flow:
     - get:
-        url: '/'
-    - get:
-        url: '/vehicles.html'
-    - get:
-        url: '/vehicle.html?id=2'
-    - get:
-        url: '/api/vehicle-messages?pageSize=100&sort=-receivedAt&query[vehicleId]=2'
+        url: "/vehicles/{{ $randomNumber(1, 50) }}"
+        capture:
+          - json: "$.vin"
+            as: "vehicleVin"
+          - json: "$.id"
+            as: "vehicleId"
+    - put:
+        ifTrue: vehicleId
+        url: "/vehicles/{{ vehicleId }}"
+        json:
+          availability: true
+    - loop:
+      - post:
+          ifTrue: vehicleVin
+          url: "/vehicles/{{ vehicleVin }}/messages"
+          json:
+            lat: "{{ lat }}"
+            lng: "{{ lng }}"
+            fuelLevel: "{{ fuelLevel }}"
+            odometer: "{{ odometer }}"
+            speed: "{{ speed }}"
+      - think: 2
+      count: 15
+    - think: 15
+    - put:
+        ifTrue: vehicleId
+        url: "/vehicles/{{ vehicleId }}"
+        json:
+          availability: false
+  - name: "Admin dashboard mock"
+    weight: 2
+    flow:
+    - loop:
+      - get:
+          url: "/vehicles"
+      - get:
+          url: "/rides"
+      - think: 5
+      count: 40
+    - loop:
+      - get:
+          url: "/vehicles/{{ $randomNumber(1, 20) }}"
+      - think: 15
+      - get:
+          url: "/vehicles/{{ $randomNumber(1, 30) }}/messages"
+      - think: 5
+      count: 5
+    - loop:
+      - get:
+          url: "/rides/{{ $randomNumber(1, 20) }}"
+      - think: 15
+      count: 5
+  - name: "Ride"
+    weight: 5
+    flow:
+      - post:
+          url: "/rides"
+          json:
+            startLocation:
+              lat: "{{ lat }}"
+              lng: "{{ lng }}"
+            endLocation:
+              lat: "{{ lat + 0.013 }}"
+              lng: "{{ lng + 0.00432 }}"
+            passengerCount: "{{ $randomNumber(1, 4) }}"
+          capture:
+            json: "$.id"
+            as: "rideId"
+      - think: 15
+      - put:
+          ifTrue: "{{ rideId }}"
+          url: "/rides/{{ rideId }}/status"
+    

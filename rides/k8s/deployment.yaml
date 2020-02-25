@@ -14,7 +14,7 @@ spec:
         app: foober-rides
     spec:
       containers:
-        - image: miksamixa/foober-rides:v1
+        - image: miksamixa/foober-rides:v2
           name: rides
           resources:
             requests:

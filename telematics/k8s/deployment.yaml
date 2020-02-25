@@ -14,7 +14,7 @@ spec:
         app: foober-telematics
     spec:
       containers:
-        - image: miksamixa/foober-telematics:v1
+        - image: miksamixa/foober-telematics:v2
           name: telematics
           resources:
             requests:
@@ -27,4 +27,4 @@ spec:
             - name: SERVICEDIR
               value: services
             - name: DB_URL
-              value: mongodb://telematics-db-mongodb-replicaset-client:27017/telematics
+              value: mongodb://telematics-db-mongodb-replicaset-client:27017/telematics?replicaSet=rs0

@@ -43,6 +43,9 @@ module.exports = {
 		async lastMessage({ params }) {
 			const vehicleId = '' + params.vehicleId
 			const messages = await this.actions.find({ query: { vehicleId }, sort: '-receivedAt', limit: 1 })
+
+			if (messages.length == 0) return null
+			
 			// returning vehicleId as a number
 			return { ...messages[0], vehicleId: parseInt(messages[0].vehicleId, 10) }
 		},

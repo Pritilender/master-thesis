@@ -1,0 +1,9 @@
+make,model,type,seatCount,fuelType,licensePlate,vin
+Mercedes,GLB,SUV,4,gas,NI123TX,WDB1234
+Mercedes,C-Class,sedan,3,gas,NI424TX,WDC1222
+Mercedes,C-Class,sedan,2,diesel,NI001TX,WDB1211
+Mercedes,S-Class,sedan,2,gas,NI002TX,WDB1030
+Mercedes,Maybach,sedan,3,gas,NI003TX,WDB1123
+BMW,Series 3,sedan,4,diesel,NI0120TX,WDB1001
+BMW,i3,sedan,3,electric,NI112TX,WDB1120
+BMW,i3,sedan,3,electric,NI114TX,WDD2133
