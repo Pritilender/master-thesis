@@ -18,10 +18,10 @@ spec:
           name: rides
           resources:
             requests:
-              cpu: 50m
+              cpu: 100m
               memory: 256M
             limits:
-              cpu: 100m
+              cpu: 200m
               memory: 320M
           env:
             - name: SERVICEDIR

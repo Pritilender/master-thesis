@@ -18,7 +18,7 @@ spec:
           name: telematics
           resources:
             requests:
-              cpu: 100m
+              cpu: 200m
               memory: 256M
             limits:
               cpu: 300m
