@@ -1,0 +1,55 @@
+config:
+  target: https://foober.mihajlo.dev/api
+  http:
+    timeout: 15
+  phases:
+    - duration: 10
+      arrivalCount: 5
+    - duration: 30
+      arrivalCount: 200
+  payload:
+    - path: "vehicles.csv"
+      fields:
+        - id
+        - vin
+        - make
+        - model
+        - type
+        - seatCount
+        - fuelType
+        - licensePlate
+      skipHeader: true
+      order: sequence
+    - path: "messages.csv"
+      fields:
+        - lng
+        - lat
+        - fuelLevel
+        - odometer
+        - speed
+      skipHeader: true
+scenarios:
+  - name: "Send message"
+    flow:
+    - put:
+        url: "/vehicles/{{ id }}"
+        json:
+          availability: true
+    - loop:
+      - post:
+          url: "/vehicles/{{ vin }}/messages"
+          json:
+            lat: "{{ lat }}"
+            lng: "{{ lng }}"
+            fuelLevel: "{{ fuelLevel }}"
+            odometer: "{{ odometer }}"
+            speed: "{{ speed }}"
+      - think: 2
+      count: 300
+    - think: 15
+    - put:
+        # ifTrue: "$randomNumber(1, 500) % 3"
+        url: "/vehicles/{{ id }}"
+        json:
+          availability: false
+    

@@ -1,0 +1,13 @@
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: telematics
+  labels:
+    name: telematics
+    release: metrics
+spec:
+  selector:
+    matchLabels:
+      name: telematics
+  endpoints: 
+  - port: metrics

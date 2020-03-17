@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vehicles
+  labels:
+    app: foober-vehicles
 spec:
   replicas: 1
   selector:
@@ -14,11 +16,17 @@ spec:
         app: foober-vehicles
     spec:
       containers:
-        - image: miksamixa/foober-vehicles:v1
+        - image: miksamixa/foober-vehicles:v2
           name: vehicles
+          livenessProbe:
+            httpGet:
+              path: /vehicles/health
+              port: 8888
+            initialDelaySeconds: 5
+            periodSeconds: 5
           resources:
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 256M
             limits:
               cpu: 200m
@@ -34,3 +42,5 @@ spec:
               value: dbuser
             - name: DB_PASSWORD
               value: super_secret
+          ports:
+            - containerPort: 3030

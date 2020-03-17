@@ -1,0 +1,6 @@
+# Disabled because it's running locally
+grafana:
+  enabled: false
+
+alertmanager:
+  enabled: false

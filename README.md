@@ -67,3 +67,7 @@ Summary report @ 23:37:19(+0100) 2020-01-21
   Codes:
     200: 3600
     404: 1200
+
+
+Without autoscaling: https://snapshot.raintank.io/dashboard/snapshot/c653IJii1hF9fmphODoU33PcTcdL8kgG
+With autoscaling: https://snapshot.raintank.io/dashboard/snapshot/f6eDmdPmkzC08zcrPPM0XWmsj1Z0vpfg

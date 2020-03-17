@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-gateway
+  labels:
+    app: foober-api-gateway
 spec:
   replicas: 1
   selector:
@@ -14,11 +16,17 @@ spec:
         app: foober-api-gateway
     spec:
       containers:
-        - image: miksamixa/foober-api-gateway:v1
+        - image: miksamixa/foober-api-gateway:v2
           name: api-gateway
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
           resources:
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 200M
             limits:
               cpu: 200m
@@ -30,3 +38,4 @@ spec:
               value: services
           ports:
             - containerPort: 3000
+            - containerPort: 3030

@@ -1,0 +1,40 @@
+config:
+  target: https://foober.mihajlo.dev/api
+  http:
+    timeout: 15
+  phases:
+    - duration: 60
+      arrivalCount: 20
+    - duration: 120
+      arrivalRate: 20
+    - duration: 120
+      arrivalRate: 10
+    - duration: 60
+      arrivalCount: 20
+  payload:
+    - path: "messages.csv"
+      fields:
+        - lng
+        - lat
+      skipHeader: true
+scenarios:
+  - name: "Ride"
+    flow:
+      - post:
+          url: "/rides"
+          json:
+            startLocation:
+              lat: "{{ lat }}"
+              lng: "{{ lng }}"
+            endLocation:
+              lat: "{{ lat + 0.013 }}"
+              lng: "{{ lng + 0.00432 }}"
+            passengerCount: "{{ $randomNumber(1, 4) }}"
+          capture:
+            json: "$.id"
+            as: "rideId"
+      - think: 15
+      - put:
+          ifTrue: "rideId"
+          url: "/rides/{{ rideId }}/status"
+    

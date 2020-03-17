@@ -1,12 +1,17 @@
-# services are not needed for Moleculer to work
 apiVersion: v1
 kind: Service
 metadata:
   name: api-gateway
+  labels:
+    name: api-gateway
 spec:
   type: NodePort
   selector:
     app: foober-api-gateway
   ports:
-  - port: 80
+  - name: http
+    port: 80
     targetPort: 3000
+  - name: metrics
+    port: 3030
+    targetPort: 3030

@@ -1,0 +1,34 @@
+config:
+  target: https://foober.mihajlo.dev/api
+  http:
+    timeout: 15
+  phases:
+    - duration: 30
+      arrivalCount: 200
+  payload:
+    - path: "vehicles.csv"
+      fields:
+        - id
+        - vin
+        - make
+        - model
+        - type
+        - seatCount
+        - fuelType
+        - licensePlate
+      skipHeader: true
+      order: sequence
+scenarios:
+  - name: "New vehicle"
+    flow:
+    - post:
+        url: "/vehicles"
+        json:
+          id: "{{ id }}"
+          vin: "{{ vin }}"
+          make: "{{ make }}"
+          model: "{{ model }}"
+          type: "{{ type }}"
+          seatCount: "{{ seatCount }}"
+          fuelType: "{{ fuelType }}"
+          licensePlate: "{{ licensePlate }}"

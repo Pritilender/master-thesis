@@ -1,0 +1,13 @@
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: rides
+  labels:
+    name: rides
+    release: metrics
+spec:
+  selector:
+    matchLabels:
+      name: rides
+  endpoints: 
+  - port: metrics

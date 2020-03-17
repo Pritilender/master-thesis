@@ -114,10 +114,25 @@ module.exports = {
 	// Enable parameters validation. More info: https://moleculer.services/docs/0.13/validating.html
 	validator: false,
 
-	// Enable metrics function. More info: https://moleculer.services/docs/0.13/metrics.html
-	metrics: false,
-	// Rate of metrics calls. 1 means to measure every request, 0 means to measure nothing.
-	metricsRate: 1,
+	metrics: {
+		enabled: true,
+		reporter: [
+			{
+				type: 'Prometheus',
+				options: {
+					// HTTP port
+					port: 3030,
+					// HTTP URL path
+					path: '/metrics',
+					// Default labels which are appended to all metrics labels
+					// defaultLabels: registry => ({
+					// 	namespace: registry.broker.namespace,
+					// 	nodeID: registry.broker.nodeID
+					// })
+				}
+			}
+		]
+	},
 
 	// Register internal services ("$node"). More info: https://moleculer.services/docs/0.13/services.html#Internal-services
 	internalServices: true,

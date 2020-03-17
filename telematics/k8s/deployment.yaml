@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: telematics
+  labels:
+    app: foober-telematics
 spec:
   replicas: 1
   selector:
@@ -14,11 +16,17 @@ spec:
         app: foober-telematics
     spec:
       containers:
-        - image: miksamixa/foober-telematics:v2
+        - image: miksamixa/foober-telematics:v1
           name: telematics
+          livenessProbe:
+            httpGet:
+              path: /telematics/health
+              port: 8888
+            initialDelaySeconds: 5
+            periodSeconds: 5
           resources:
             requests:
-              cpu: 200m
+              cpu: 50m
               memory: 256M
             limits:
               cpu: 300m
@@ -28,3 +36,5 @@ spec:
               value: services
             - name: DB_URL
               value: mongodb://telematics-db-mongodb-replicaset-client:27017/telematics?replicaSet=rs0
+          ports:
+            - containerPort: 3030

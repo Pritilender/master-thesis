@@ -1,12 +1,19 @@
-apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v2beta1
 metadata:
   name: api-gateway
 spec:
-  maxReplicas: 3
-  minReplicas: 1
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: api-gateway
-  targetCPUUtilizationPercentage: 70
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Pods
+    pods:
+      # use the metric that you used above: pods/http_requests
+      metricName: moleculer_request_per_second
+      # target 50000 milli-requests per second,
+      # which is 50 request every second
+      targetAverageValue: 50000m

@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rides
+  labels:
+    app: foober-rides
 spec:
   replicas: 1
   selector:
@@ -16,9 +18,15 @@ spec:
       containers:
         - image: miksamixa/foober-rides:v2
           name: rides
+          livenessProbe:
+            httpGet:
+              path: /rides/health
+              port: 8888
+            initialDelaySeconds: 5
+            periodSeconds: 5
           resources:
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 256M
             limits:
               cpu: 200m
@@ -34,3 +42,5 @@ spec:
               value: dbuser
             - name: DB_PASSWORD
               value: super_secret
+          ports:
+            - containerPort: 3030

@@ -1,0 +1,13 @@
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: vehicles
+  labels:
+    name: vehicles
+    release: metrics
+spec:
+  selector:
+    matchLabels:
+      name: vehicles
+  endpoints: 
+  - port: metrics

@@ -19,6 +19,7 @@ module.exports = {
 					'POST rides': 'rides.startRide',
 					'PUT rides/:rideId/status': 'rides.endRide',
 					'GET rides': 'rides.list',
+					'GET health': 'api.health',
 				}
 			},
 		],
@@ -29,5 +30,10 @@ module.exports = {
 	},
 	started() {
 		this.logger.info('Listening on port', process.env.PORT)
+	},
+	actions: {
+		health() {
+			return true
+		}
 	}
 }
