@@ -2,6 +2,7 @@
 const DbService = require('moleculer-db')
 const MongoDBAdapter = require('moleculer-db-adapter-mongo')
 const ApiService = require('moleculer-web')
+const { MoleculerError } = require('moleculer').Errors
 
 module.exports = {
 	name: 'telematics',
@@ -10,7 +11,7 @@ module.exports = {
 	collection: 'messages',
 	async afterConnected() {
 		await this.adapter.collection.createIndex({ vehicleId: 1, receivedAt: -1 })
-		await this.adapter.collection.createIndex({ location: '2dsphere' })
+		await this.adapter.collection.createIndex({ 'parsed.location': '2dsphere' })
 	},
 	/**
 	 * Actions
@@ -20,9 +21,12 @@ module.exports = {
 			const receivedAt = Date.now()
 			const message = this.parseMessage(params)
 			const vehicle = await this.broker.call('vehicles.findByVin', { vin: params.vin })
+			if (!vehicle) throw new MoleculerError('Vehicle not found.', 404, 'VEHICLE_NOT_FOUND')
+
 			const shouldUpdate = await this.shouldUpdate(vehicle.id + '', message)
 			
 			if (shouldUpdate) {
+				// TODO: make this an explicit action on vehicles
 				await this.broker.call('vehicles.update', { id: vehicle.id, alert: this.alert(message), ...message })
 			}
 			
@@ -48,6 +52,33 @@ module.exports = {
 			
 			// returning vehicleId as a number
 			return { ...messages[0], vehicleId: parseInt(messages[0].vehicleId, 10) }
+		},
+		async closestVehicleMessage({ params }) {
+			const { lat, lng } = params
+			const vehicleIds = params.vehicleIds.map(x => '' + x)
+			const messages = await this.actions.find({ query: {
+				receivedAt: {
+					$gt: Date.now() - 10 * 1000,
+				},
+				vehicleId: { $in: vehicleIds },
+				'parsed.location': {
+					$near: {
+						$geometry: {
+							type: 'Point',
+							coordinates: [lng, lat]
+						},
+						$maxDistance: 15000
+					}
+				}
+			},
+			limit: 1
+			})
+
+			if (messages[0]) {
+				return { ...messages[0], vehicleId: parseInt(messages[0].vehicleId, 10) }
+			} else {
+				return null
+			}
 		},
 		async health({ params }) {
 			await this.actions.list({ pageSize: 1})

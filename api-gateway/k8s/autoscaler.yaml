@@ -8,7 +8,7 @@ spec:
     kind: Deployment
     name: api-gateway
   minReplicas: 1
-  maxReplicas: 5
+  maxReplicas: 10
   metrics:
   - type: Pods
     pods:
@@ -16,4 +16,4 @@ spec:
       metricName: moleculer_request_per_second
       # target 50000 milli-requests per second,
       # which is 50 request every second
-      targetAverageValue: 50000m
+      targetAverageValue: 25000m

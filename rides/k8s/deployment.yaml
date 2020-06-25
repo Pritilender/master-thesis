@@ -16,14 +16,14 @@ spec:
         app: foober-rides
     spec:
       containers:
-        - image: miksamixa/foober-rides:v2
+        - image: miksamixa/foober-rides:v5
           name: rides
           livenessProbe:
             httpGet:
               path: /rides/health
               port: 8888
             initialDelaySeconds: 5
-            periodSeconds: 5
+            periodSeconds: 30
           resources:
             requests:
               cpu: 50m

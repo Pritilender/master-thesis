@@ -46,16 +46,13 @@ module.exports = {
 	},
 	methods: {
 		async closestVehicle(vehicles, { lat, lng }) {
-			const vehicleLastLocations = await Promise.all(vehicles.map(v => this.broker.call('telematics.lastMessage', { vehicleId: v.id})))
-			
-			const { closestId } = vehicleLastLocations.filter(x => x != null)
-				.reduce(({ closestId, distance }, { parsed: message, vehicleId }) => {
-					const [vehicleLng, vehicleLat] = message.location.coordinates
-					const currentDistance = Math.sqrt((lat - vehicleLat) ** 2 + (lng - vehicleLng) ** 2)
-					return distance > currentDistance ? { closestId: vehicleId, distance: currentDistance } : { closestId, distance }
-				}, { closestId: null, distance: Infinity })
+			const message = await this.broker.call('telematics.closestVehicleMessage', { vehicleIds: vehicles.map(x => x.id), lat, lng })
 
-			return vehicles.find(v => v.id == closestId)
+			if (message) {
+				return vehicles.find(v => v.id == message.vehicleId)
+			} else {
+				throw new MoleculerError('There are no available vehicles right now.', 400, 'NO_AVAILABLE_VEHICLES')
+			}
 		}
 	},
 	// Health Check

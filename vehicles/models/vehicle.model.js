@@ -72,8 +72,21 @@ const model = {
 	},
 	options: {
 		timestamps: true,
-		version: true,
 		underscored: true,
+		indexes: [
+			{
+				fields: ['seat_count'],
+				where: {
+					availability: true,
+				},
+			},
+			{
+				fields: ['availability'],
+			},
+			{
+				fields: ['vin']
+			}
+		],
 	}
 }
 

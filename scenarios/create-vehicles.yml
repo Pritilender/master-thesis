@@ -1,5 +1,5 @@
 config:
-  target: https://foober.mihajlo.dev/api
+  target: http://34.120.22.141/api
   http:
     timeout: 15
   phases:

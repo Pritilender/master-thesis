@@ -48,9 +48,9 @@ module.exports = {
 		// Count of retries
 		retries: 5,
 		// First delay in milliseconds.
-		delay: 100,
+		delay: 500,
 		// Maximum delay in milliseconds.
-		maxDelay: 1000,
+		maxDelay: 10000,
 		// Backoff factor for delay. 2 means exponential backoff.
 		factor: 2,
 		// A function to check failed requests.

@@ -1,12 +1,14 @@
 config:
-  target: https://foober.mihajlo.dev/api
+  target: http://34.120.22.141/api
   http:
-    timeout: 15
+    timeout: 10
   phases:
     - duration: 10
-      arrivalCount: 5
-    - duration: 30
-      arrivalCount: 200
+      arrivalRate: 1
+      rampTo: 10
+    - duration: 6
+      arrivalRate: 10
+      rampTo: 50
   payload:
     - path: "vehicles.csv"
       fields:
@@ -44,8 +46,8 @@ scenarios:
             fuelLevel: "{{ fuelLevel }}"
             odometer: "{{ odometer }}"
             speed: "{{ speed }}"
-      - think: 2
-      count: 300
+      - think: 5
+      count: 50
     - think: 15
     - put:
         # ifTrue: "$randomNumber(1, 500) % 3"

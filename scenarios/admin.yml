@@ -1,10 +1,10 @@
 config:
-  target: https://foober.mihajlo.dev/api
+  target: http://34.120.22.141/api
   http:
-    timeout: 15
+    timeout: 10
   phases:
-    - duration: 180
-      arrivalCount: 30
+    - duration: 10
+      arrivalCount: 5
 scenarios:
   - name: "Admin dashboard mock"
     flow:
@@ -13,12 +13,12 @@ scenarios:
           url: "/vehicles"
       - get:
           url: "/rides"
-      - think: 5
+      - think: 10
       count: 20
     - loop:
       - get:
           url: "/vehicles/{{ $randomNumber(1, 20) }}"
-      - think: 15
+      - think: 5
       - get:
           url: "/vehicles/{{ $randomNumber(1, 30) }}/messages"
       - think: 5
@@ -26,5 +26,5 @@ scenarios:
     - loop:
       - get:
           url: "/rides/{{ $randomNumber(1, 20) }}"
-      - think: 15
+      - think: 10
       count: 5

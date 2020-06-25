@@ -16,14 +16,14 @@ spec:
         app: foober-vehicles
     spec:
       containers:
-        - image: miksamixa/foober-vehicles:v2
+        - image: miksamixa/foober-vehicles:v6
           name: vehicles
           livenessProbe:
             httpGet:
               path: /vehicles/health
               port: 8888
             initialDelaySeconds: 5
-            periodSeconds: 5
+            periodSeconds: 30
           resources:
             requests:
               cpu: 50m

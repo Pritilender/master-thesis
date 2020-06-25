@@ -2,12 +2,11 @@ apiVersion: "extensions/v1beta1"
 kind: "Ingress"
 metadata:
   name: "api"
-  annotations:
-    ingress.gcp.kubernetes.io/pre-shared-cert: "foober-managed-cert"
+  # annotations:
+  #   ingress.gcp.kubernetes.io/pre-shared-cert: "foober-managed-cert"
 spec:
   rules:
-    - host: foober.mihajlo.dev
-      http:
+    - http:
         paths:
           - backend:
               serviceName: api-gateway

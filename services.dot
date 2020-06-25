@@ -1,7 +1,7 @@
 digraph G {
     /* Entities */
-    ui [label="UI", shape="rect"]
-    car [label="Car", shape=""]
+    ui [label="Korisnici", shape=""]
+    car [label="Vozila", shape=""]
     
     vehicleService [label="Vehicle Service", shape="rect", group="vehicle"]
     vehicleDb [label="SQL DB", shape="cylinder", group="vehicle"]

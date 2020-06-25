@@ -48,9 +48,9 @@ module.exports = {
 		// Count of retries
 		retries: 5,
 		// First delay in milliseconds.
-		delay: 100,
+		delay: 500,
 		// Maximum delay in milliseconds.
-		maxDelay: 1000,
+		maxDelay: 10000,
 		// Backoff factor for delay. 2 means exponential backoff.
 		factor: 2,
 		// A function to check failed requests.
@@ -88,7 +88,7 @@ module.exports = {
 	// Settings of Circuit Breaker. More info: https://moleculer.services/docs/0.13/fault-tolerance.html#Circuit-Breaker
 	circuitBreaker: {
 		// Enable feature
-		enabled: false,
+		enabled: true,
 		// Threshold value. 0.5 means that 50% should be failed for tripping.
 		threshold: 0.5,
 		// Minimum request count. Below it, CB does not trip.

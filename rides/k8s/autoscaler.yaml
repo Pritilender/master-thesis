@@ -16,4 +16,4 @@ spec:
       metricName: moleculer_request_per_second
       # target 20000 milli-requests per second,
       # which is 20 request every second
-      targetAverageValue: 20000m
+      targetAverageValue: 50000m
