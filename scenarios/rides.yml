@@ -1,5 +1,9 @@
 config:
   target: http://34.120.22.141/api
+  plugins:
+    publish-metrics:
+      - type: statsd
+        prefix: 'rides-'
   http:
     timeout: 30
   phases:

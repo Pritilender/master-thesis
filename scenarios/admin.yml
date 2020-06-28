@@ -1,4 +1,8 @@
 config:
+  plugins:
+    publish-metrics:
+      - type: statsd
+        prefix: 'admin-'
   target: http://34.120.22.141/api
   http:
     timeout: 10

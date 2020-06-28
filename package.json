@@ -1,0 +1,22 @@
+{
+  "name": "master",
+  "version": "1.0.0",
+  "scripts": {
+    "dc:up": "docker-compose up --build -d",
+    "dc:down": "docker-compose down"
+  },
+  "keywords": [
+    "microservices",
+    "moleculer"
+  ],
+  "author": "Mihajlo Ilijic",
+  "devDependencies": {
+    "artillery": "1.6.0",
+    "artillery-plugin-publish-metrics": "1.1.0"
+  },
+  "dependencies": {
+  },
+  "engines": {
+    "node": ">= 12.x.x"
+  }
+}

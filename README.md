@@ -1,73 +1,54 @@
-[![Moleculer](https://badgen.net/badge/Powered%20by/Moleculer/0e83cd)](https://moleculer.services)
-
 # Master
 
-## NPM scripts
+Repozitorijum projekta izrađenog u okviru master rada na temu _Orkestracija reaktivnih mikroservisa na Kubernetes platformi_ na Elektronskom fakultetu u Nišu.
+Projekat je skup mikroservisa razvijenih u Moleculer okviru koji čine sistem za praćenje vozila i omogućavaju kreiranje novih vožnji.
 
-- `yarn dev`: Start development mode (load all services locally with hot-reload & REPL)
-- `yarn start`: Start production mode (set `SERVICES` env variable to load certain services)
-- `yarn cli`: Start a CLI and connect to production. Don't forget to set production namespace with `--ns` argument in script
-- `yarn lint`: Run ESLint
-- `yarn dc:up`: Start the stack with Docker Compose
-- `yarn dc:down`: Stop the stack with Docker Compose
+## Neophodni alati za razvoj
 
-## Artillery reports
+Za lokalno pokretanje projekta je potrebno imati instaliran Docker i Node.js minimalne verzije 12.
 
-All up:
+## NPM skripte
 
-Summary report @ 23:30:32(+0100) 2020-01-21
-  Scenarios launched:  1200
-  Scenarios completed: 1200
-  Requests completed:  4800
-  RPS sent: 39.87
-  Request latency:
-    min: 16
-    max: 750.6
-    median: 25.1
-    p95: 72.9
-    p99: 171.5
-  Scenario counts:
-    0: 1200 (100%)
-  Codes:
-    200: 4800
+- `yarn dc:up`: Pokretanje svih mikroservisa, baza podataka i NATS servera korišćenjem Docker Compose
+- `yarn dc:down`: Zaustavljanje prethodno pokrenutih komponenti putem Docker Compose
 
-When node turned off:
-Summary report @ 23:35:05(+0100) 2020-01-21
-  Scenarios launched:  1200
-  Scenarios completed: 1200
-  Requests completed:  4800
-  RPS sent: 39.87
-  Request latency:
-    min: 16
-    max: 10130
-    median: 103.1
-    p95: 9017.2
-    p99: 9033.8
-  Scenario counts:
-    0: 1200 (100%)
-  Codes:
-    200: 3279
-    404: 1121
-    502: 400
+## Testiranje opterećenja
 
-After some time (note that exactly 1/4 of requests are failing -> these are all that have hit the mt-api-gateway at the "dead" node):
-Summary report @ 23:37:19(+0100) 2020-01-21
-  Scenarios launched:  1200
-  Scenarios completed: 1200
-  Requests completed:  4800
-  RPS sent: 39.87
-  Request latency:
-    min: 16.1
-    max: 548.8
-    median: 33.7
-    p95: 131.4
-    p99: 210.1
-  Scenario counts:
-    0: 1200 (100%)
-  Codes:
-    200: 3600
-    404: 1200
+U folderu `scenarios` se nalaze Artillery skripte za testiranje opterećenja.
+Kako bi ove skripte mogle da se pokrenu, potrebno je imati Artillery instaliran, što je moguće uraditi pokretanjem `yarn` komande iz root foldera.
+Ovim putem će biti instaliran i plugin za Artillery koji šalje StatsD metrike prilikom izvršenja Artillery skripte, koje se mogu prikazati u Grafani.
 
+### Kubernetes klaster na Google Cloud Platformi (GCP)
 
-Without autoscaling: https://snapshot.raintank.io/dashboard/snapshot/c653IJii1hF9fmphODoU33PcTcdL8kgG
-With autoscaling: https://snapshot.raintank.io/dashboard/snapshot/f6eDmdPmkzC08zcrPPM0XWmsj1Z0vpfg
+Pre izvršenja testiranja opterećenja, potrebno je pokrenuti projekat na Kubernetes klasteru željene veličine i izmeniti opciju `target` u svim Artillery skriptama da ukazuju na IP adresu klastera.
+Ukoliko se projekat pokreće na GKE-u, skripta `build_and_deploy.sh` će pokrenuti klater od 4 čvora tipa N1-Standard-2 i pokrenuti sve neophodne Helm karte i Kubernetes resurse.
+Prilikom pokretanja ove skripte je potrebno zadati ID GCP projekta i ime klastera.
+
+### Grafički prikaz testiranja opterećenja
+
+Za grafički prikaz rezultata neophodno je imati lokalno pokrenutu instancu Grafane.
+Potrebno je uvesti dashboard koji se nalazi u fajlu `foober-dashboard.json`.
+
+Nakon toga, potrebno je lokalno proslediti port Prometheus poda: `kubectl port-forward $PROMETHEUS_METRICS_POD_NAME 9090`.
+
+Ukoliko je potrebno prikazati i StatsD metrike dobijene za izvršenje Artillery skripti, potrebno je pokrenuti i Graphite Docker sliku:
+```sh
+docker run -d\
+ -p 80:80\
+ -p 2003-2004:2003-2004\
+ -p 2023-2024:2023-2024\
+ -p 8125:8125/udp\
+ -p 8126:8126\
+ graphiteapp/graphite-statsd
+```
+
+### Testiranje opterećenja
+
+Pre prvog pokretanja, neophodno je prvo izvršiti `artillery run scenarios/create-vehicles.yml` Artillery skriptu koja kreira 200 vozila na osnovu `scenarios/vehicles.csv` fajla.
+
+Nakon što se ova skripta izvrši, moguće je pristupiti testiranju.
+Skripta `scenarios/run.js` pokreće tri Artillery skripte (admin, messages i rides), sa razmakom od 10 i 20 sekundi između prve dve i druge dve skripte.
+Ova skripta očekuje ime foldera u kome će čuvati izveštaje o pokretanju.
+
+Sada preostaje da se sačeka sa izvršenjem.
+Ukoliko je neophodne neke parametre autoskalera promeniti, to treba učiniti i ponovo pokrenuti testiranje, nakon što su ti parametri primenjeni putem kubectl komande.

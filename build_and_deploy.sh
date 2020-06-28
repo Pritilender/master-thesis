@@ -1,26 +1,49 @@
 #!/bin/bash
 
+PROJECT_ID=$1
+CLUSTER_NAME=$2
+
 # # build docker images and push them to the Docker registry
-cd api-gateway
-docker build -t miksamixa/foober-api-gateway:v1 .
-docker push miksamixa/foober-api-gateway:v1
+# cd api-gateway
+# docker build -t miksamixa/foober-api-gateway:v1 .
+# docker push miksamixa/foober-api-gateway:v1
 
-cd ../telematics
-docker build -t miksamixa/foober-telematics:v3 .
-docker push miksamixa/foober-telematics:v3
+# cd ../telematics
+# docker build -t miksamixa/foober-telematics:v3 .
+# docker push miksamixa/foober-telematics:v3
 
-cd ../vehicles
-docker build -t miksamixa/foober-vehicles:v6 .
-docker push miksamixa/foober-vehicles:v6
+# cd ../vehicles
+# docker build -t miksamixa/foober-vehicles:v6 .
+# docker push miksamixa/foober-vehicles:v6
 
-cd ../rides
-docker build -t miksamixa/foober-rides:v5 .
-docker push miksamixa/foober-rides:v5
+# cd ../rides
+# docker build -t miksamixa/foober-rides:v5 .
+# docker push miksamixa/foober-rides:v5
 
-# # create a K8S cluster on GKE
-cd ..
-# # gcloud container clusters create foober --num-nodes 4 --machine-type n1-standard-2 --zone europe-west3
-# # gcloud beta compute ssl-certificates create foober --domains DOMAIN_1,DOMAIN_2 --description DESC
+# create a K8S cluster on GKE
+# cd ..
+gcloud beta container --project "$PROJECT_ID" clusters create "$CLUSTER_NAME" \
+ --zone "europe-west3-a" \
+ --no-enable-basic-auth \
+ --cluster-version "1.14.10-gke.36" \
+ --machine-type "n1-standard-2" \
+ --image-type "COS" \
+ --disk-type "pd-standard" \
+ --disk-size "100" \
+ --metadata disable-legacy-endpoints=true \
+ --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
+ --num-nodes "4" \
+ --enable-stackdriver-kubernetes \
+ --enable-ip-alias \
+ --network "projects/$1/global/networks/default" \
+ --subnetwork "projects/$1/regions/europe-west3/subnetworks/default" \
+ --default-max-pods-per-node "110" \
+ --no-enable-master-authorized-networks \
+ --addons HorizontalPodAutoscaling,HttpLoadBalancing \
+ --enable-autoupgrade \
+ --enable-autorepair \
+ --max-surge-upgrade 1 \
+ --max-unavailable-upgrade 0
 
 helm install nats stable/nats -f api-gateway/k8s/nats-config.yml
 helm install telematics-db stable/mongodb-replicaset -f telematics/k8s/mongo-config.yml
